@@ -78,5 +78,17 @@ namespace Business.Services
                 throw;
             }
         }
+
+        public FundooUser Login(string email, string password)
+        {
+            try
+            {
+                return this.fundooUserRL.Login(email, password);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

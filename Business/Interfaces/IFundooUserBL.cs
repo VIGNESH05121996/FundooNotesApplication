@@ -15,5 +15,6 @@ namespace Business.Interfaces
         TEntity GetWithId(long id);
         void Update(TEntity dbEntity, TEntity entity);
         void Delete(TEntity entity);
+        FundooUser Login(string email,string password);
     }
 }

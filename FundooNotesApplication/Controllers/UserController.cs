@@ -111,7 +111,24 @@ namespace FundooNotesApplication.Controllers
             {
                 throw;
             }
+        }
 
+        [HttpPost("login")]
+        public IActionResult Login(LoginModel model)
+        {
+            try
+            {
+                FundooUser credentials = userBL.Login(model.Email, model.Password);
+                if (credentials.Email == null)
+                {
+                    return BadRequest(new { Success = false, message = "Email or Password Not Found" });
+                }
+                return Ok(new { Success = true, message = "Login Successful" });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

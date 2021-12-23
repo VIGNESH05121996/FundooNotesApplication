@@ -93,5 +93,17 @@ namespace Repository.Services
                 throw;
             }
         }
+
+        public FundooUser Login(string email, string password)
+        {
+            try
+            {
+                return this.context.FundooUserTable.FirstOrDefault(e => e.Email == email && e.Password == password);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
