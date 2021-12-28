@@ -32,54 +32,6 @@ namespace Business.Services
             }
         }
 
-        public IEnumerable<FundooUser> GetAllData()
-        {
-            try
-            {
-                return this.fundooUserRL.GetAllData();
-            }
-            catch(Exception)
-            {
-                throw;
-            }
-        }
-
-        public FundooUser GetWithId(long id)
-        {
-            try
-            {
-                return this.fundooUserRL.GetWithId(id);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public void Delete(FundooUser entity)
-        {
-            try
-            {
-                this.fundooUserRL.Delete(entity);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public void Update(FundooUser dbEntity, FundooUser entity)
-        {
-            try
-            {
-                this.fundooUserRL.Update(dbEntity, entity);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public string Login(LoginModel model)
         {
             try
