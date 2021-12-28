@@ -2,6 +2,7 @@
 using Common.Models;
 using Repository.Entities;
 using Repository.Interfaces;
+using Repository.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,11 +80,11 @@ namespace Business.Services
             }
         }
 
-        public FundooUser Login(string email, string password)
+        public string Login(LoginModel model)
         {
             try
             {
-                return this.fundooUserRL.Login(email, password);
+                return this.fundooUserRL.Login(model);
             }
             catch (Exception)
             {

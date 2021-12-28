@@ -1,10 +1,13 @@
 ﻿using Common.Models;
+using Microsoft.IdentityModel.Tokens;
 using Repository.Context;
 using Repository.Entities;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -94,11 +97,33 @@ namespace Repository.Services
             }
         }
 
-        public FundooUser Login(string email, string password)
+
+        public string Login(LoginModel model)
         {
             try
             {
-                return this.context.FundooUserTable.FirstOrDefault(e => e.Email == email && e.Password == password);
+                var loginValidation= this.context.FundooUserTable.FirstOrDefault(e => e.Email == model.Email && e.Password == model.Password);
+                if(loginValidation != null)
+                {
+                    string key = "MyFundooSecretKey-VIGNESH05121996";
+                    var loginTokenHandler = new JwtSecurityTokenHandler();
+                    var loginTokenKey = Encoding.ASCII.GetBytes(key);
+                    var loginTokenDescriptor = new SecurityTokenDescriptor
+                    {
+                        Subject = new ClaimsIdentity(new Claim[]
+                        {
+                        new Claim(ClaimTypes.Name, model.Email)
+                        }),
+                        Expires = DateTime.UtcNow.AddMinutes(15),
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(loginTokenKey), SecurityAlgorithms.HmacSha256Signature)
+                    };
+                    var token = loginTokenHandler.CreateToken(loginTokenDescriptor);
+                    return loginTokenHandler.WriteToken(token);
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception)
             {

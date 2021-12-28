@@ -1,15 +1,19 @@
 ﻿using Business.Interfaces;
 using Common.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FundooNotesApplication.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -19,8 +23,6 @@ namespace FundooNotesApplication.Controllers
         {
             this.userBL = userBL;
         }
-
-
         [HttpPost("register")]
         public IActionResult Register(RegistrationModel model)
         {
@@ -113,17 +115,19 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        
+        [AllowAnonymous]
         [HttpPost("login")]
         public IActionResult Login(LoginModel model)
         {
             try
             {
-                FundooUser credentials = userBL.Login(model.Email, model.Password);
-                if (credentials.Email == null)
+                string credentials = userBL.Login(model);
+                if (credentials == null)
                 {
                     return BadRequest(new { Success = false, message = "Email or Password Not Found" });
                 }
-                return Ok(new { Success = true, message = "Login Successful" });
+                return Ok(new { Success = true, message = "Login Successful",JwtToken=credentials});
             }
             catch (Exception)
             {
