@@ -23,7 +23,6 @@ namespace FundooNotesApplication.Controllers
         }
 
         [Authorize]
-        //[AllowAnonymous]
         [HttpPost("CreateNotes")]
         public IActionResult CreateNotes(NotesModel model)
         {

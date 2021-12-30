@@ -31,7 +31,7 @@ namespace Repository.Services
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
-                    Password = model.Password,
+                    Password = EncryptedPassword(model.Password),
                     CreatedAt = model.CreatedAt
                 };
                 this.context.Add(user);
@@ -47,8 +47,7 @@ namespace Repository.Services
         {
             try
             {
-                var loginValidation= this.context.UserTable.FirstOrDefault(e => e.Email == model.Email && e.Password == model.Password);
-                FundooUser user = new FundooUser();
+                var loginValidation= this.context.UserTable.FirstOrDefault(e => e.Email == model.Email && e.Password == EncryptedPassword(model.Password));
                 if(loginValidation != null)
                 {
                     string key = "MyFundooSecretKey-VIGNESH05121996";
@@ -72,6 +71,21 @@ namespace Repository.Services
                 }
             }
             catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static string EncryptedPassword(string password)
+        {
+            try
+            {
+                byte[] encptPass = new byte[password.Length];
+                encptPass = Encoding.UTF8.GetBytes(password);
+                string encrypted = Convert.ToBase64String(encptPass);
+                return encrypted;
+            }
+            catch(Exception)
             {
                 throw;
             }
