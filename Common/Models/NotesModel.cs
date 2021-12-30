@@ -36,6 +36,6 @@ namespace Common.Models
         [DataType(DataType.DateTime)]
         public DateTime? CreatedAt { get; set; }
 
-        public long UserId { get; set; }
+       public long UserId { get; set; }
     }
 }

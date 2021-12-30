@@ -48,6 +48,7 @@ namespace Repository.Services
             try
             {
                 var loginValidation= this.context.UserTable.FirstOrDefault(e => e.Email == model.Email && e.Password == model.Password);
+                FundooUser user = new FundooUser();
                 if(loginValidation != null)
                 {
                     string key = "MyFundooSecretKey-VIGNESH05121996";
@@ -57,7 +58,7 @@ namespace Repository.Services
                     {
                         Subject = new ClaimsIdentity(new Claim[]
                         {
-                        new Claim(ClaimTypes.Name, model.Email)
+                        new Claim("Email", model.Email)
                         }),
                         Expires = DateTime.UtcNow.AddMinutes(15),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(loginTokenKey), SecurityAlgorithms.HmacSha256Signature)

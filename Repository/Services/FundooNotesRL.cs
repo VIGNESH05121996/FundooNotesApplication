@@ -25,11 +25,12 @@ namespace Repository.Services
                 {
                     Title = model.Title,
                     Message = model.Message,
-                    Color=model.Color,
-                    Image=model.Image,
-                    Archive=model.Archive,
-                    Pin=model.Pin,
-                    CreatedAt=model.CreatedAt
+                    Color = model.Color,
+                    Image = model.Image,
+                    Archive = model.Archive,
+                    Pin = model.Pin,
+                    CreatedAt = model.CreatedAt,
+                    UserId = model.UserId,
                 };
                 this.context.Add(notes);
                 this.context.SaveChanges();
@@ -76,6 +77,7 @@ namespace Repository.Services
                 updateNotes.Pin = notes.Pin;
                 updateNotes.Trash = notes.Trash;
                 updateNotes.ModifiedAt = notes.ModifiedAt;
+                
                 this.context.SaveChanges();
             }
             catch (Exception)
