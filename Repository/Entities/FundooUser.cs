@@ -12,7 +12,7 @@ namespace Repository.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public long UserId { get; set; }
 
         [Required(ErrorMessage = "First Name is required")]
         [DataType(DataType.Text)]
@@ -43,5 +43,7 @@ namespace Repository.Entities
 
         [DataType(DataType.DateTime)]
         public DateTime? ModifiedAt { get; set; }
+
+        public ICollection<FundooNotes> FundooNotes { get; set; }
     }
 }

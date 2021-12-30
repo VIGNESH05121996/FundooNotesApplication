@@ -39,6 +39,8 @@ namespace FundooNotesApplication
         {
             services.AddTransient<IFundooUserBL<FundooUser>, FundooUserBL>();
             services.AddTransient<IFundooUserRL<FundooUser>, FundooUserRL>();
+            services.AddTransient<IFundooNotesBL, FundooNotesBL>();
+            services.AddTransient<IFundooNotesRL, FundooNotesRL>();
 
             services.AddAuthentication(x =>
             {
@@ -60,33 +62,7 @@ namespace FundooNotesApplication
 
             services.AddDbContext<FundooUserContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:FundooAppDB"]));
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FundooNotesApplication", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-                {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description = "Authorize using JWT token"
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                          new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.SecurityScheme,
-                                    Id = "bearerAuth"
-                                }
-                            },
-                            new string[] {}
-                    }
-                });
-            });
+        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

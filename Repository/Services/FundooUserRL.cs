@@ -47,7 +47,7 @@ namespace Repository.Services
         {
             try
             {
-                var loginValidation= this.context.FundooUserTable.FirstOrDefault(e => e.Email == model.Email && e.Password == model.Password);
+                var loginValidation= this.context.UserTable.FirstOrDefault(e => e.Email == model.Email && e.Password == model.Password);
                 if(loginValidation != null)
                 {
                     string key = "MyFundooSecretKey-VIGNESH05121996";

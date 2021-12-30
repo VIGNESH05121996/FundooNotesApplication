@@ -13,8 +13,6 @@ using System.Threading.Tasks;
 
 namespace FundooNotesApplication.Controllers
 {
-    [Authorize]
-    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -43,7 +41,6 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost("login")]
         public IActionResult Login(LoginModel model)
         {

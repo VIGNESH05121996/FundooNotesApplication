@@ -14,7 +14,8 @@ namespace Repository.Context
            : base(options)
         {
         }
-        public DbSet<FundooUser> FundooUserTable { get; set; }
+        public DbSet<FundooUser> UserTable { get; set; }
+        public DbSet<FundooNotes> NotesTable { get; set; }
     }
 }
 
