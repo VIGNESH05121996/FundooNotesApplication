@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FundooNotesApplication.Controllers
 {
-    
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class NotesController : ControllerBase
@@ -22,7 +22,6 @@ namespace FundooNotesApplication.Controllers
             this.notesBL = notesBL;
         }
 
-        [Authorize]
         [HttpPost("CreateNotes")]
         public IActionResult CreateNotes(NotesModel model)
         {

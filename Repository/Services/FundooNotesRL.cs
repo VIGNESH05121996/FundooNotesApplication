@@ -30,7 +30,7 @@ namespace Repository.Services
                     Archive = model.Archive,
                     Pin = model.Pin,
                     CreatedAt = model.CreatedAt,
-                    UserId = model.UserId,
+                    UserId = model.UserId
                 };
                 this.context.Add(notes);
                 this.context.SaveChanges();

@@ -1,4 +1,5 @@
 ﻿using Common.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Repository.Context;
 using Repository.Entities;
@@ -17,9 +18,44 @@ namespace Repository.Services
     {
         readonly FundooUserContext context;
 
-        public FundooUserRL(FundooUserContext context)
+        private readonly IConfiguration _config;
+        public FundooUserRL(FundooUserContext context,IConfiguration config)
         {
             this.context = context;
+            _config = config;
+        }
+
+        public static string EncryptedPassword(string password)
+        {
+            try
+            {
+                byte[] encptPass = new byte[password.Length];
+                encptPass = Encoding.UTF8.GetBytes(password);
+                string encrypted = Convert.ToBase64String(encptPass);
+                return encrypted;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public string JwtTokenGenerate(string email, long userId)
+        {
+            var loginTokenHandler = new JwtSecurityTokenHandler();
+            var loginTokenKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config[("Jwt:key")]));
+            var loginTokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                        new Claim("Email", email),
+                        new Claim("UserId",userId.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(15),
+                SigningCredentials = new SigningCredentials(loginTokenKey, SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = loginTokenHandler.CreateToken(loginTokenDescriptor);
+            return loginTokenHandler.WriteToken(token);
         }
 
         public void Register(RegistrationModel model)
@@ -50,20 +86,8 @@ namespace Repository.Services
                 var loginValidation= this.context.UserTable.FirstOrDefault(e => e.Email == model.Email && e.Password == EncryptedPassword(model.Password));
                 if(loginValidation != null)
                 {
-                    string key = "MyFundooSecretKey-VIGNESH05121996";
-                    var loginTokenHandler = new JwtSecurityTokenHandler();
-                    var loginTokenKey = Encoding.ASCII.GetBytes(key);
-                    var loginTokenDescriptor = new SecurityTokenDescriptor
-                    {
-                        Subject = new ClaimsIdentity(new Claim[]
-                        {
-                        new Claim("Email", model.Email)
-                        }),
-                        Expires = DateTime.UtcNow.AddMinutes(15),
-                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(loginTokenKey), SecurityAlgorithms.HmacSha256Signature)
-                    };
-                    var token = loginTokenHandler.CreateToken(loginTokenDescriptor);
-                    return loginTokenHandler.WriteToken(token);
+                    var token = JwtTokenGenerate(model.Email, loginValidation.UserId);
+                    return token;
                 }
                 else
                 {
@@ -71,21 +95,6 @@ namespace Repository.Services
                 }
             }
             catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public static string EncryptedPassword(string password)
-        {
-            try
-            {
-                byte[] encptPass = new byte[password.Length];
-                encptPass = Encoding.UTF8.GetBytes(password);
-                string encrypted = Convert.ToBase64String(encptPass);
-                return encrypted;
-            }
-            catch(Exception)
             {
                 throw;
             }
