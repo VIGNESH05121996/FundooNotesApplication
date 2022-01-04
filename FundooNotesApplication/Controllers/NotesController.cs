@@ -72,7 +72,7 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Notes With Particular NotesId " });
                 }
-                return Ok(new { Success = true, message = "Retrived Notes With Particular ", notes });
+                return Ok(new { Success = true, message = "Retrived Notes With Particular NotesId ", notes });
             }
             catch (Exception)
             {

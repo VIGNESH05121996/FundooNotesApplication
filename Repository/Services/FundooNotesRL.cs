@@ -61,7 +61,7 @@ namespace Repository.Services
                 var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId);
                 if(validUserId != null)
                 {
-                    return this.context.NotesTable.FirstOrDefault(i => i.NotesId == notesId);
+                    return this.context.NotesTable.FirstOrDefault(i => i.NotesId == notesId && i.UserId == jwtUserId);
                 }
                 return null;
             }
