@@ -12,7 +12,7 @@ namespace Common.Models
         //[Required(ErrorMessage = "Email is not in database")]
         //[Display(Name = "Email")]
         //public string Email { get; set; }
-        public string Token { get; set; }
+        //public string Token { get; set; }
 
         [Required(ErrorMessage = "New Password is required")]
         [Display(Name = "New Password")]

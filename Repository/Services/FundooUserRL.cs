@@ -22,7 +22,7 @@ namespace Repository.Services
         private readonly IConfiguration _config;
 
 
-        public FundooUserRL(FundooUserContext context,IConfiguration config)
+        public FundooUserRL(FundooUserContext context, IConfiguration config)
         {
             this.context = context;
             _config = config;
@@ -86,8 +86,8 @@ namespace Repository.Services
         {
             try
             {
-                var loginValidation= this.context.UserTable.FirstOrDefault(e => e.Email == model.Email && e.Password == EncryptedPassword(model.Password));
-                if(loginValidation != null)
+                var loginValidation = this.context.UserTable.FirstOrDefault(e => e.Email == model.Email && e.Password == EncryptedPassword(model.Password));
+                if (loginValidation != null)
                 {
                     var token = JwtTokenGenerate(model.Email, loginValidation.UserId);
                     return token;
@@ -103,25 +103,14 @@ namespace Repository.Services
             }
         }
 
- 
-
-        public static string DecodeJwt(string token)
-        {
-            var decodeToken = token;
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadJwtToken((decodeToken));
-            var result = jsonToken.Claims.FirstOrDefault().Value;
-            return result;
-        }
-
-        public async Task<string> ForgetPassword(ForgetPasswordModel model)
+        public string ForgetPassword(ForgetPasswordModel model)
         {
             try
             {
                 var emailValidation = this.context.UserTable.FirstOrDefault(e => e.Email == model.Email);
                 if (emailValidation != null)
                 {
-                    var token = JwtTokenGenerate(emailValidation.Email,emailValidation.UserId);
+                    var token = JwtTokenGenerate(emailValidation.Email, emailValidation.UserId);
                     new MsmqModel().MsmqSender(token);
                     return "Email Sent";
                 }
@@ -134,6 +123,18 @@ namespace Repository.Services
             {
                 throw;
             }
+        }
+
+        public bool ResetPassword(ResetPasswordModel model,string email)
+        {
+            var resetPassword = this.context.UserTable.FirstOrDefault(e => e.Email == email);
+            if (resetPassword != null && model.NewPassword == model.ConfirmPassword)
+            {
+                resetPassword.Password = EncryptedPassword(model.NewPassword);
+                this.context.SaveChanges();
+                return true;
+            }
+            return false;   
         }
     }
 }

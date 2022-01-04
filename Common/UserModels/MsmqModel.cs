@@ -35,6 +35,7 @@ namespace Common.Models
             string Subject = "Fundoo Notes Application Password Reset";
             string Body = token;
             string jwt = DecodeJwt(token);
+            
 
             //mail sending code
 

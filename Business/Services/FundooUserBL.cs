@@ -44,11 +44,23 @@ namespace Business.Services
             }
         }
 
-        public async Task<string> ForgetPassword(ForgetPasswordModel model)
+        public string ForgetPassword(ForgetPasswordModel model)
         {
             try
             {
-                return await this.fundooUserRL.ForgetPassword(model);
+                return this.fundooUserRL.ForgetPassword(model);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+ 
+        public bool ResetPassword(ResetPasswordModel model,string email)
+        {
+            try
+            {
+                return this.fundooUserRL.ResetPassword(model,email);
             }
             catch (Exception)
             {

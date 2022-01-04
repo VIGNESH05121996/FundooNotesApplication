@@ -60,16 +60,36 @@ namespace FundooNotesApplication.Controllers
         }
 
         [HttpPost("ForgetPassword")]
-        public async Task<IActionResult> ForgetPassword(ForgetPasswordModel model)
+        public IActionResult ForgetPassword(ForgetPasswordModel model)
         {
             try
             {
-                string forgetPassword = await userBL.ForgetPassword(model);
+                string forgetPassword = userBL.ForgetPassword(model);
                 if (forgetPassword != null)
                 {
                     return Ok(new { Success = true, message = "Password Reset Mail Sent" });
                 }
                 return BadRequest(new { Success = false, message = "Invalid Credentials for reset password" });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [Authorize]
+        [HttpPut("ResetPassword")]
+        public IActionResult ResetPassword(ResetPasswordModel model)
+        {
+            try
+            {
+                var email = User.FindFirst(ClaimTypes.Email).Value.ToString();
+                bool resetPassword = userBL.ResetPassword(model,email);
+                if (resetPassword)
+                {
+                    return Ok(new { Success = true, message = "Password Reset Successful" });
+                }
+                return BadRequest(new { Success = false, message = "New Password not match with confirm password" });
             }
             catch (Exception)
             {

@@ -12,6 +12,7 @@ namespace Repository.Interfaces
     {
         void Register(RegistrationModel model);
         string Login(LoginModel model);
-        Task<string> ForgetPassword(ForgetPasswordModel model);
+        string ForgetPassword(ForgetPasswordModel model);
+        bool ResetPassword(ResetPasswordModel model,string email);
     }
 }
