@@ -1,4 +1,5 @@
 ﻿using Common.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Repository.Context;
@@ -19,6 +20,8 @@ namespace Repository.Services
         readonly FundooUserContext context;
 
         private readonly IConfiguration _config;
+
+
         public FundooUserRL(FundooUserContext context,IConfiguration config)
         {
             this.context = context;
@@ -48,7 +51,7 @@ namespace Repository.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                        new Claim("Email", email),
+                        new Claim(ClaimTypes.Email, email),
                         new Claim("UserId",userId.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
@@ -92,6 +95,39 @@ namespace Repository.Services
                 else
                 {
                     return null;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+ 
+
+        public static string DecodeJwt(string token)
+        {
+            var decodeToken = token;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadJwtToken((decodeToken));
+            var result = jsonToken.Claims.FirstOrDefault().Value;
+            return result;
+        }
+
+        public async Task<string> ForgetPassword(ForgetPasswordModel model)
+        {
+            try
+            {
+                var emailValidation = this.context.UserTable.FirstOrDefault(e => e.Email == model.Email);
+                if (emailValidation != null)
+                {
+                    var token = JwtTokenGenerate(emailValidation.Email,emailValidation.UserId);
+                    new MsmqModel().MsmqSender(token);
+                    return "Email Sent";
+                }
+                else
+                {
+                    return "Email not sent";
                 }
             }
             catch (Exception)

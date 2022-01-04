@@ -22,11 +22,13 @@ namespace FundooNotesApplication.Controllers
             this.notesBL = notesBL;
         }
 
-        [HttpPost("CreateNotes")]
+        [HttpPost]
         public IActionResult CreateNotes(NotesModel model)
         {
             try
             {
+                var valid = HttpContext.User;
+                long userId = Convert.ToInt32(valid.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (model == null)
                 {
                     return BadRequest(new { Success = false, message = "No Data in notes" });
@@ -40,7 +42,7 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
-        [HttpGet("GetAllNotes")]
+        [HttpGet]
         public IActionResult GetAllData()
         {
             try
@@ -58,7 +60,7 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
-        [HttpGet("GetNotesWithId/{notesId}")]
+        [HttpGet("Id")]
         public IActionResult GetNotesWithId(long notesId)
         {
             try
@@ -76,7 +78,7 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
-        [HttpPut("UpdateNotesWithId/{notesId}")]
+        [HttpPut("Id")]
         public IActionResult UpdateNotes(long notesId, FundooNotes notes)
         {
             try
@@ -95,7 +97,7 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
-        [HttpDelete("DeleteWithId/{notesId}")]
+        [HttpDelete("Id")]
         public IActionResult DeleteNotes(long notesId)
         {
             try

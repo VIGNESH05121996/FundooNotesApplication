@@ -12,5 +12,6 @@ namespace Business.Interfaces
     {
         void Register(RegistrationModel model);
         string Login(LoginModel model);
+        Task<string> ForgetPassword(ForgetPasswordModel model);
     }
 }

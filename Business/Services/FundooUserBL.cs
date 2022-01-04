@@ -43,5 +43,17 @@ namespace Business.Services
                 throw;
             }
         }
+
+        public async Task<string> ForgetPassword(ForgetPasswordModel model)
+        {
+            try
+            {
+                return await this.fundooUserRL.ForgetPassword(model);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
