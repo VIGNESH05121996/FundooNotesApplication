@@ -1,5 +1,6 @@
 ﻿using Business.Interfaces;
 using Common.Models;
+using Common.NotesModels;
 using Repository.Entities;
 using Repository.Interfaces;
 using System;
@@ -17,11 +18,11 @@ namespace Business.Services
         {
             this.fundooNotesRL = fundooNotesRL;
         }
-        public void CreateNotes(NotesModel model)
+        public void CreateNotes(NotesModel model,long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.CreateNotes(model);
+                this.fundooNotesRL.CreateNotes(model,jwtUserId);
             }
             catch(Exception)
             {
@@ -29,11 +30,11 @@ namespace Business.Services
             }
         }
 
-        public IEnumerable<FundooNotes> GetAllNotes()
+        public IEnumerable<FundooNotes> GetAllNotes(long jwtUserId)
         {
             try
             {
-                return this.fundooNotesRL.GetAllNotes();
+                return this.fundooNotesRL.GetAllNotes(jwtUserId);
             }
             catch(Exception)
             {
@@ -41,11 +42,11 @@ namespace Business.Services
             }
         }
 
-        public FundooNotes GetNotesWithId(long notesId)
+        public FundooNotes GetNotesWithId(long notesId, long jwtUserId)
         {
             try
             {
-                return this.fundooNotesRL.GetNotesWithId(notesId);
+                return this.fundooNotesRL.GetNotesWithId(notesId,jwtUserId);
             }
             catch (Exception)
             {
@@ -53,11 +54,11 @@ namespace Business.Services
             }
         }
 
-        public void UpdateNotes(FundooNotes updateNotes, FundooNotes notes)
+        public void UpdateNotes(FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.UpdateNotes(updateNotes, notes);
+                this.fundooNotesRL.UpdateNotes(updateNotes, notes,jwtUserId);
             }
             catch (Exception)
             {
@@ -65,11 +66,11 @@ namespace Business.Services
             }
         }
 
-        public void DeleteNotes(FundooNotes notes)
+        public void DeleteNotes(FundooNotes notes, long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.DeleteNotes(notes);
+                this.fundooNotesRL.DeleteNotes(notes,jwtUserId);
             }
             catch (Exception)
             {

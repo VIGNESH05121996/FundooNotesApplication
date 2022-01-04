@@ -35,29 +35,36 @@ namespace Common.Models
             string Subject = "Fundoo Notes Application Password Reset";
             string Body = token;
             string jwt = DecodeJwt(token);
-            
+
 
             //mail sending code
 
             var smtpClient = new SmtpClient("smtp.gmail.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential("vickytestsmtp@gmail.com", "TestSmtp"),
-                    EnableSsl = true,
-                };
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("vickytestsmtp@gmail.com", "TestSmtp"),
+                EnableSsl = true,
+            };
 
-                smtpClient.Send("vickytestsmtp@gmail.com", jwt, Subject, Body);
+            smtpClient.Send("vickytestsmtp@gmail.com", jwt, Subject, Body);
 
             //msmq receiver
             msmq.BeginReceive();
         }
         public static string DecodeJwt(string token)
         {
-            var decodeToken = token;
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadJwtToken((decodeToken));
-            var result = jsonToken.Claims.FirstOrDefault().Value;
-            return result;
+            try
+            {
+                var decodeToken = token;
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadJwtToken((decodeToken));
+                var result = jsonToken.Claims.FirstOrDefault().Value;
+                return result;
+            }
+            catch(Exception)
+            {
+                throw;
+            }
         }
     }
 }

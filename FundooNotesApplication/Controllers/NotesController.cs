@@ -1,5 +1,6 @@
 ﻿using Business.Interfaces;
 using Common.Models;
+using Common.NotesModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,13 +28,12 @@ namespace FundooNotesApplication.Controllers
         {
             try
             {
-                var valid = HttpContext.User;
-                long userId = Convert.ToInt32(valid.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (model == null)
                 {
                     return BadRequest(new { Success = false, message = "No Data in notes" });
                 }
-                notesBL.CreateNotes(model);
+                notesBL.CreateNotes(model,jwtUserId);
                 return Ok(new { Success = true, message = "Notes Created Successfully" });
             }
             catch (Exception)
@@ -47,7 +47,8 @@ namespace FundooNotesApplication.Controllers
         {
             try
             {
-                IEnumerable<FundooNotes> notes = notesBL.GetAllNotes();
+                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                IEnumerable<FundooNotes> notes = notesBL.GetAllNotes(jwtUserId);
                 if (notes == null)
                 {
                     return BadRequest(new { Success = false, message = "No notes in database " });
@@ -65,7 +66,8 @@ namespace FundooNotesApplication.Controllers
         {
             try
             {
-                FundooNotes notes = notesBL.GetNotesWithId(notesId);
+                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                FundooNotes notes = notesBL.GetNotesWithId(notesId,jwtUserId);
                 if (notes == null)
                 {
                     return BadRequest(new { Success = false, message = "No Notes With Particular NotesId " });
@@ -79,16 +81,17 @@ namespace FundooNotesApplication.Controllers
         }
 
         [HttpPut("Id")]
-        public IActionResult UpdateNotes(long notesId, FundooNotes notes)
+        public IActionResult UpdateNotes(long notesId, UpdateNotesModel notes)
         {
             try
             {
-                FundooNotes updateNotes = notesBL.GetNotesWithId(notesId);
+                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                FundooNotes updateNotes = notesBL.GetNotesWithId(notesId,jwtUserId);
                 if (updateNotes == null)
                 {
                     return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
                 }
-                notesBL.UpdateNotes(updateNotes, notes);
+                notesBL.UpdateNotes(updateNotes, notes,jwtUserId);
                 return Ok(new { Success = true, message = "Notes Updated Sucessfully" });
             }
             catch (Exception)
@@ -102,12 +105,13 @@ namespace FundooNotesApplication.Controllers
         {
             try
             {
-                FundooNotes notes = notesBL.GetNotesWithId(notesId);
+                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                FundooNotes notes = notesBL.GetNotesWithId(notesId,jwtUserId);
                 if (notes == null)
                 {
                     return BadRequest(new { Success = false, message = "Notes with entered notesId not found" });
                 }
-                notesBL.DeleteNotes(notes);
+                notesBL.DeleteNotes(notes,jwtUserId);
                 return Ok(new { Success = true, message = "Notes Deleted From DataBase" });
             }
             catch (Exception)

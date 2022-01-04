@@ -49,7 +49,6 @@ namespace Repository.Entities
         [DataType(DataType.DateTime)]
         public DateTime? ModifiedAt { get; set; }
 
-
         public long UserId { get; set; }
         [ForeignKey("UserId")]
 

@@ -45,20 +45,27 @@ namespace Repository.Services
 
         public string JwtTokenGenerate(string email, long userId)
         {
-            var loginTokenHandler = new JwtSecurityTokenHandler();
-            var loginTokenKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config[("Jwt:key")]));
-            var loginTokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                var loginTokenHandler = new JwtSecurityTokenHandler();
+                var loginTokenKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config[("Jwt:key")]));
+                var loginTokenDescriptor = new SecurityTokenDescriptor
                 {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                         new Claim(ClaimTypes.Email, email),
                         new Claim("UserId",userId.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddMinutes(15),
-                SigningCredentials = new SigningCredentials(loginTokenKey, SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = loginTokenHandler.CreateToken(loginTokenDescriptor);
-            return loginTokenHandler.WriteToken(token);
+                    }),
+                    Expires = DateTime.UtcNow.AddMinutes(15),
+                    SigningCredentials = new SigningCredentials(loginTokenKey, SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = loginTokenHandler.CreateToken(loginTokenDescriptor);
+                return loginTokenHandler.WriteToken(token);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
         }
 
         public void Register(RegistrationModel model)
@@ -127,14 +134,21 @@ namespace Repository.Services
 
         public bool ResetPassword(ResetPasswordModel model,string email)
         {
-            var resetPassword = this.context.UserTable.FirstOrDefault(e => e.Email == email);
-            if (resetPassword != null && model.NewPassword == model.ConfirmPassword)
+            try
             {
-                resetPassword.Password = EncryptedPassword(model.NewPassword);
-                this.context.SaveChanges();
-                return true;
+                var resetPassword = this.context.UserTable.FirstOrDefault(e => e.Email == email);
+                if (resetPassword != null && model.NewPassword == model.ConfirmPassword)
+                {
+                    resetPassword.Password = EncryptedPassword(model.NewPassword);
+                    this.context.SaveChanges();
+                    return true;
+                }
+                return false;
             }
-            return false;   
+            catch(Exception)
+            {
+                throw;
+            }
         }
     }
 }
