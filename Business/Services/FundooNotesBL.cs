@@ -77,5 +77,53 @@ namespace Business.Services
                 throw;
             }
         }
+
+        public void PinNotes(long notesId, long jwtUserId)
+        {
+            try
+            {
+                this.fundooNotesRL.PinNotes(notesId, jwtUserId);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+        }
+
+        public void UnPinNotes(long notesId, long jwtUserId)
+        {
+            try
+            {
+                this.fundooNotesRL.UnPinNotes(notesId, jwtUserId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void ArchiveNotes(long notesId, long jwtUserId)
+        {
+            try
+            {
+                this.fundooNotesRL.ArchiveNotes(notesId, jwtUserId);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
+        }
+
+        public void UnArchiveNotes(long notesId, long jwtUserId)
+        {
+            try
+            {
+                this.fundooNotesRL.UnArchiveNotes(notesId, jwtUserId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
