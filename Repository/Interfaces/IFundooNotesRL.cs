@@ -16,9 +16,7 @@ namespace Repository.Interfaces
         FundooNotes GetNotesWithId(long notesId, long jwtUserId);
         void UpdateNotes(FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId);
         void DeleteNotes(FundooNotes notes, long jwtUserId);
-        void PinNotes(long notesId, long jwtUserId);
-        void UnPinNotes(long notesId, long jwtUserId);
-        void ArchiveNotes(long notesId, long jwtUserId);
-        void UnArchiveNotes(long notesId, long jwtUserId);
+        string PinningNotes(long notesId, long jwtUserId);
+        string ArchivivingNotes(long notesId, long jwtUserId);
     }
 }

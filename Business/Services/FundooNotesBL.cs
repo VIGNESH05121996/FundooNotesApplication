@@ -78,11 +78,11 @@ namespace Business.Services
             }
         }
 
-        public void PinNotes(long notesId, long jwtUserId)
+        public string PinningNotes(long notesId, long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.PinNotes(notesId, jwtUserId);
+                return this.fundooNotesRL.PinningNotes(notesId, jwtUserId);
             }
             catch(Exception)
             {
@@ -90,37 +90,13 @@ namespace Business.Services
             }
         }
 
-        public void UnPinNotes(long notesId, long jwtUserId)
+        public string ArchivivingNotes(long notesId, long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.UnPinNotes(notesId, jwtUserId);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public void ArchiveNotes(long notesId, long jwtUserId)
-        {
-            try
-            {
-                this.fundooNotesRL.ArchiveNotes(notesId, jwtUserId);
+                return this.fundooNotesRL.ArchivivingNotes(notesId, jwtUserId);
             }
             catch(Exception)
-            {
-                throw;
-            }
-        }
-
-        public void UnArchiveNotes(long notesId, long jwtUserId)
-        {
-            try
-            {
-                this.fundooNotesRL.UnArchiveNotes(notesId, jwtUserId);
-            }
-            catch (Exception)
             {
                 throw;
             }

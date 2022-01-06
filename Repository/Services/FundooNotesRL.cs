@@ -112,7 +112,7 @@ namespace Repository.Services
             }
         }
 
-        public void PinNotes(long notesId, long jwtUserId)
+        public string PinningNotes(long notesId, long jwtUserId)
         {
             try
             {
@@ -124,8 +124,17 @@ namespace Repository.Services
                     {
                         pinNotes.Pin = true;
                         this.context.SaveChanges();
+                        return "Note Pinned";
                     }
+                    var unPinNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Pin == true);
+                    if (unPinNotes != null)
+                    {
+                        unPinNotes.Pin = false;
+                        this.context.SaveChanges();
+                        return "Note Unpinned";
+                    } 
                 }
+                return null;
             }
             catch (Exception)
             {
@@ -133,28 +142,7 @@ namespace Repository.Services
             }
         }
 
-        public void UnPinNotes(long notesId, long jwtUserId)
-        {
-            try
-            {
-                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId && e.NotesId == notesId);
-                if (validUserId != null)
-                {
-                    var unPinNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Pin == true);
-                    if (unPinNotes != null)
-                    {
-                        unPinNotes.Pin = false;
-                        this.context.SaveChanges();
-                    }
-                }
-            }
-            catch(Exception)
-            {
-                throw;
-            }
-        }
-
-        public void ArchiveNotes(long notesId, long jwtUserId)
+        public string ArchivivingNotes(long notesId, long jwtUserId)
         {
             try
             {
@@ -166,31 +154,19 @@ namespace Repository.Services
                     {
                         archiveNotes.Archive = true;
                         this.context.SaveChanges();
+                        return "Note Archivied";
                     }
-                }
-            }
-            catch(Exception)
-            {
-                throw;
-            }
-        }
-
-        public void UnArchiveNotes(long notesId, long jwtUserId)
-        {
-            try
-            {
-                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId && e.NotesId == notesId);
-                if (validUserId != null)
-                {
                     var unArchiveNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Archive == true);
                     if (unArchiveNotes != null)
                     {
                         unArchiveNotes.Archive = false;
                         this.context.SaveChanges();
+                        return "Note UnArchivied";
                     }
                 }
+                return null;
             }
-            catch (Exception)
+            catch(Exception)
             {
                 throw;
             }
