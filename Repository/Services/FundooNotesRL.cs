@@ -80,11 +80,7 @@ namespace Repository.Services
                 {
                     updateNotes.Title = notes.Title;
                     updateNotes.Message = notes.Message;
-                    updateNotes.Color = notes.Color;
                     updateNotes.Image = notes.Image;
-                    updateNotes.Archive = notes.Archive;
-                    updateNotes.Pin = notes.Pin;
-                    updateNotes.Trash = notes.Trash;
                     updateNotes.ModifiedAt = notes.ModifiedAt;
                     this.context.SaveChanges();
                 } 
@@ -195,6 +191,23 @@ namespace Repository.Services
                     }
                 }
                 return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void ColorNotes(FundooNotes colorNotes, ColorModel color, long jwtUserId)
+        {
+            try
+            {
+                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId);
+                if (validUserId != null)
+                {
+                    colorNotes.Color = color.Color;
+                    this.context.SaveChanges();
+                }
             }
             catch (Exception)
             {

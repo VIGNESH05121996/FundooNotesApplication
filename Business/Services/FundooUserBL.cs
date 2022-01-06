@@ -55,12 +55,12 @@ namespace Business.Services
                 throw;
             }
         }
- 
-        public bool ResetPassword(ResetPasswordModel model,string email)
+
+        public bool ResetPassword(ResetPasswordModel model, string email)
         {
             try
             {
-                return this.fundooUserRL.ResetPassword(model,email);
+                return this.fundooUserRL.ResetPassword(model, email);
             }
             catch (Exception)
             {

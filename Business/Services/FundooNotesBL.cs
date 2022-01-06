@@ -106,5 +106,10 @@ namespace Business.Services
         {
             return this.fundooNotesRL.TrashingNotes(notesId, jwtUserId);
         }
+
+        public void ColorNotes(FundooNotes colorNotes, ColorModel color, long jwtUserId)
+        {
+            this.fundooNotesRL.ColorNotes(colorNotes, color, jwtUserId);
+        }
     }
 }

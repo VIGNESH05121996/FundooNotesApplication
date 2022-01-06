@@ -19,5 +19,6 @@ namespace Repository.Interfaces
         string PinningNotes(long notesId, long jwtUserId);
         string ArchivivingNotes(long notesId, long jwtUserId);
         string TrashingNotes(long notesId, long jwtUserId);
+        void ColorNotes(FundooNotes colorNotes, ColorModel color, long jwtUserId);
     }
 }

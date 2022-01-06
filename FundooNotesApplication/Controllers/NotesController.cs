@@ -176,5 +176,25 @@ namespace FundooNotesApplication.Controllers
                 throw;
             }
         }
+
+        [HttpPut("Color")]
+        public IActionResult ColorNotes(long notesId, ColorModel color)
+        {
+            try
+            {
+                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                FundooNotes colorNotes = notesBL.GetNotesWithId(notesId, jwtUserId);
+                if (colorNotes == null)
+                {
+                    return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
+                }
+                notesBL.ColorNotes(colorNotes, color, jwtUserId);
+                return Ok(new { Success = true, message = "Color Updated" });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
