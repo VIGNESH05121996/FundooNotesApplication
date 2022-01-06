@@ -171,5 +171,35 @@ namespace Repository.Services
                 throw;
             }
         }
+
+        public string TrashingNotes(long notesId, long jwtUserId)
+        {
+            try
+            {
+                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId && e.NotesId == notesId);
+                if (validUserId != null)
+                {
+                    var trashNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Trash == false);
+                    if (trashNotes != null)
+                    {
+                        trashNotes.Trash = true;
+                        this.context.SaveChanges();
+                        return "Note Moved To Trash";
+                    }
+                    var unTrashNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Trash == true);
+                    if (unTrashNotes != null)
+                    {
+                        unTrashNotes.Trash = false;
+                        this.context.SaveChanges();
+                        return "Note UnTrashed";
+                    }
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

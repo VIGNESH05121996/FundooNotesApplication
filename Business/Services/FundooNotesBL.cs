@@ -101,5 +101,10 @@ namespace Business.Services
                 throw;
             }
         }
+
+        public string TrashingNotes(long notesId, long jwtUserId)
+        {
+            return this.fundooNotesRL.TrashingNotes(notesId, jwtUserId);
+        }
     }
 }

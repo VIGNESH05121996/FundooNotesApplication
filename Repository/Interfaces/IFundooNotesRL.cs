@@ -18,5 +18,6 @@ namespace Repository.Interfaces
         void DeleteNotes(FundooNotes notes, long jwtUserId);
         string PinningNotes(long notesId, long jwtUserId);
         string ArchivivingNotes(long notesId, long jwtUserId);
+        string TrashingNotes(long notesId, long jwtUserId);
     }
 }

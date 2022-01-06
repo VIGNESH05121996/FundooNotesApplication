@@ -121,13 +121,12 @@ namespace FundooNotesApplication.Controllers
         }
 
         [HttpPut("Pin")]
-        public IActionResult PinningNotes(long noteId)
+        public IActionResult PinningNotes(long notesId)
         {
             try
             {
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                long notesId = notesBL.GetNotesWithId(noteId, jwtUserId).NotesId;
-                if (notesId == 0)
+                if (notesBL.GetNotesWithId(notesId, jwtUserId) == null)
                 {
                     return BadRequest(new { Status = false, Message = "No Notes available"});
                 }
@@ -141,17 +140,35 @@ namespace FundooNotesApplication.Controllers
         }
 
         [HttpPut("Archive")]
-        public IActionResult ArchivivingNotes(long noteId)
+        public IActionResult ArchivivingNotes(long notesId)
         {
             try
             {
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                long notesId = notesBL.GetNotesWithId(noteId, jwtUserId).NotesId;
-                if (notesId == 0)
+                if (notesBL.GetNotesWithId(notesId, jwtUserId) == null)
                 {
                     return BadRequest(new { Status = false, Message = "There is no notes with particuar NotesId" });
                 }
                 var result=notesBL.ArchivivingNotes(notesId, jwtUserId);
+                return Ok(new { Status = true, Message = result });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpPut("Trash")]
+        public IActionResult TrashingNotes(long notesId)
+        {
+            try
+            {
+                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                if (notesBL.GetNotesWithId(notesId, jwtUserId) == null)
+                {
+                    return BadRequest(new { Status = false, Message = "There is no notes with particuar NotesId" });
+                }
+                var result = notesBL.TrashingNotes(notesId, jwtUserId);
                 return Ok(new { Status = true, Message = result });
             }
             catch (Exception)
