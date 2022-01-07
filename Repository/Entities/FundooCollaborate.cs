@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Entities
 {
-    public class FundooCollaboratecs
+    public class FundooCollaborate
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

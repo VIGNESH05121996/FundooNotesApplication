@@ -65,11 +65,11 @@ namespace FundooNotesApplication.Controllers
             try
             {
                 string forgetPassword = userBL.ForgetPassword(model);
-                if (forgetPassword != null)
+                if (forgetPassword == null)
                 {
-                    return Ok(new { Success = true, message = "Password Reset Mail Sent" });
+                    return BadRequest(new { Success = false, message = "Email not in database" });
                 }
-                return BadRequest(new { Success = false, message = "Invalid Credentials for reset password" });
+                return Ok(new { Success = true, message = forgetPassword });
             }
             catch (Exception ex)
             {

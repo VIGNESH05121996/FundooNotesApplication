@@ -19,7 +19,7 @@ namespace Repository.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Repository.Entities.FundooCollaboratecs", b =>
+            modelBuilder.Entity("Repository.Entities.FundooCollaborate", b =>
                 {
                     b.Property<long>("CollaboratorId")
                         .ValueGeneratedOnAdd()
@@ -121,7 +121,7 @@ namespace Repository.Migrations
                     b.ToTable("UserTable");
                 });
 
-            modelBuilder.Entity("Repository.Entities.FundooCollaboratecs", b =>
+            modelBuilder.Entity("Repository.Entities.FundooCollaborate", b =>
                 {
                     b.HasOne("Repository.Entities.FundooNotes", "FundooNotes")
                         .WithMany()

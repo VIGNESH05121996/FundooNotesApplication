@@ -119,11 +119,11 @@ namespace Repository.Services
                 {
                     var token = JwtTokenGenerate(emailValidation.Email, emailValidation.UserId);
                     new MsmqModel().MsmqSender(token);
-                    return "Email Sent";
+                    return "Forget Passowrd Email Sent";
                 }
                 else
                 {
-                    return "Email not sent";
+                    return null;
                 }
             }
             catch (Exception ex)

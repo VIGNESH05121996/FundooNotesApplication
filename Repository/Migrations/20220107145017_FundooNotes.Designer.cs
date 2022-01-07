@@ -10,7 +10,7 @@ using Repository.Context;
 namespace Repository.Migrations
 {
     [DbContext(typeof(FundooUserContext))]
-    [Migration("20211230135954_FundooNotes")]
+    [Migration("20220107145017_FundooNotes")]
     partial class FundooNotes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,26 @@ namespace Repository.Migrations
                 .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Repository.Entities.FundooCollaborate", b =>
+                {
+                    b.Property<long>("CollaboratorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Collaborated_Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("NotesId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CollaboratorId");
+
+                    b.HasIndex("NotesId");
+
+                    b.ToTable("CollaboratorTable");
+                });
 
             modelBuilder.Entity("Repository.Entities.FundooNotes", b =>
                 {
@@ -101,6 +121,15 @@ namespace Repository.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("UserTable");
+                });
+
+            modelBuilder.Entity("Repository.Entities.FundooCollaborate", b =>
+                {
+                    b.HasOne("Repository.Entities.FundooNotes", "FundooNotes")
+                        .WithMany()
+                        .HasForeignKey("NotesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Repository.Entities.FundooNotes", b =>
