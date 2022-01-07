@@ -36,9 +36,9 @@ namespace FundooNotesApplication.Controllers
                 notesBL.CreateNotes(model,jwtUserId);
                 return Ok(new { Success = true, message = "Notes Created Successfully" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false,Message=ex.Message,StackTraceException = ex.StackTrace });
             }
         }
 
@@ -55,13 +55,13 @@ namespace FundooNotesApplication.Controllers
                 }
                 return Ok(new { Success = true, message = "Retrived All Notes ", notes });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
-        [HttpGet("Id")]
+        [HttpGet("{notesId}")]
         public IActionResult GetNotesWithId(long notesId)
         {
             try
@@ -74,13 +74,13 @@ namespace FundooNotesApplication.Controllers
                 }
                 return Ok(new { Success = true, message = "Retrived Notes With Particular NotesId ", notes });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
-        [HttpPut("Id")]
+        [HttpPut("{notesId}")]
         public IActionResult UpdateNotes(long notesId, UpdateNotesModel notes)
         {
             try
@@ -94,13 +94,13 @@ namespace FundooNotesApplication.Controllers
                 notesBL.UpdateNotes(updateNotes, notes,jwtUserId);
                 return Ok(new { Success = true, message = "Notes Updated Sucessfully" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
-        [HttpDelete("Id")]
+        [HttpDelete("{notesId}")]
         public IActionResult DeleteNotes(long notesId)
         {
             try
@@ -114,13 +114,13 @@ namespace FundooNotesApplication.Controllers
                 notesBL.DeleteNotes(notes,jwtUserId);
                 return Ok(new { Success = true, message = "Notes Deleted From DataBase" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
-        [HttpPut("Pin")]
+        [HttpPut("Pin/{notesId}")]
         public IActionResult PinningNotes(long notesId)
         {
             try
@@ -133,13 +133,13 @@ namespace FundooNotesApplication.Controllers
                 var result=notesBL.PinningNotes(notesId, jwtUserId);
                 return Ok(new { Status = true, Message = result });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
-        [HttpPut("Archive")]
+        [HttpPut("Archive/{notesId}")]
         public IActionResult ArchivivingNotes(long notesId)
         {
             try
@@ -152,13 +152,13 @@ namespace FundooNotesApplication.Controllers
                 var result=notesBL.ArchivivingNotes(notesId, jwtUserId);
                 return Ok(new { Status = true, Message = result });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
-        [HttpPut("Trash")]
+        [HttpPut("Trash/{notesId}")]
         public IActionResult TrashingNotes(long notesId)
         {
             try
@@ -171,13 +171,13 @@ namespace FundooNotesApplication.Controllers
                 var result = notesBL.TrashingNotes(notesId, jwtUserId);
                 return Ok(new { Status = true, Message = result });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
-        [HttpPut("Color")]
+        [HttpPut("Color/{notesId}")]
         public IActionResult ColorNotes(long notesId, ColorModel color)
         {
             try
@@ -191,9 +191,9 @@ namespace FundooNotesApplication.Controllers
                 notesBL.ColorNotes(colorNotes, color, jwtUserId);
                 return Ok(new { Success = true, message = "Color Updated" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
     }

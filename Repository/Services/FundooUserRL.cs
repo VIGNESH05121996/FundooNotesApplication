@@ -37,7 +37,7 @@ namespace Repository.Services
                 string encrypted = Convert.ToBase64String(encptPass);
                 return encrypted;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -62,7 +62,7 @@ namespace Repository.Services
                 var token = loginTokenHandler.CreateToken(loginTokenDescriptor);
                 return loginTokenHandler.WriteToken(token);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
                 throw;
             }
@@ -83,7 +83,7 @@ namespace Repository.Services
                 this.context.Add(user);
                 this.context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -104,7 +104,7 @@ namespace Repository.Services
                     return null;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -126,7 +126,7 @@ namespace Repository.Services
                     return "Email not sent";
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -145,7 +145,7 @@ namespace Repository.Services
                 }
                 return false;
             }
-            catch(Exception)
+            catch(Exception ex)
             {
                 throw;
             }

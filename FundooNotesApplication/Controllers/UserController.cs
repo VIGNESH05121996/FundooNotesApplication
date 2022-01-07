@@ -35,9 +35,9 @@ namespace FundooNotesApplication.Controllers
                 userBL.Register(model);
                 return Ok(new { Success = true, message = "Registration Successfull " });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -53,9 +53,9 @@ namespace FundooNotesApplication.Controllers
                 }
                 return Ok(new { Success = true, message = "Login Successful",JwtToken=credentials});
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -71,9 +71,9 @@ namespace FundooNotesApplication.Controllers
                 }
                 return BadRequest(new { Success = false, message = "Invalid Credentials for reset password" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -91,9 +91,9 @@ namespace FundooNotesApplication.Controllers
                 }
                 return BadRequest(new { Success = false, message = "New Password not match with confirm password" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
     }

@@ -16,6 +16,7 @@ namespace Repository.Context
         }
         public DbSet<FundooUser> UserTable { get; set; }
         public DbSet<FundooNotes> NotesTable { get; set; }
+        public DbSet<FundooCollaboratecs> CollaboratorTable { get; set; }
     }
 }
 

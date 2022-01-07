@@ -46,10 +46,16 @@ namespace Repository.Services
         {
             try
             {
-                return this.context.NotesTable.Where(e => e.UserId == jwtUserId);
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
+                if (validUserId != null)
+                {
+                    return this.context.NotesTable.Where(e => e.UserId == jwtUserId);
+                }
+                return null;    
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                
                 throw;
             }
         }
@@ -58,7 +64,7 @@ namespace Repository.Services
         {
             try
             {
-                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId);
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if(validUserId != null)
                 {
                     return this.context.NotesTable.FirstOrDefault(i => i.NotesId == notesId && i.UserId == jwtUserId);
@@ -75,7 +81,7 @@ namespace Repository.Services
         {
             try
             {
-                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId);
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
                     updateNotes.Title = notes.Title;
@@ -95,7 +101,7 @@ namespace Repository.Services
         {
             try
             {
-                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId);
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
                     this.context.NotesTable.Remove(notes);
@@ -112,7 +118,7 @@ namespace Repository.Services
         {
             try
             {
-                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId && e.NotesId == notesId);
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
                     var pinNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Pin == false);
@@ -142,7 +148,7 @@ namespace Repository.Services
         {
             try
             {
-                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId && e.NotesId == notesId);
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
                     var archiveNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Archive == false);
@@ -172,7 +178,7 @@ namespace Repository.Services
         {
             try
             {
-                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId && e.NotesId == notesId);
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
                     var trashNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Trash == false);
@@ -202,7 +208,7 @@ namespace Repository.Services
         {
             try
             {
-                var validUserId = this.context.NotesTable.Where(e => e.UserId == jwtUserId);
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
                     colorNotes.Color = color.Color;

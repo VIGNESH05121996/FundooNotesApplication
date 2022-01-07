@@ -26,7 +26,7 @@ namespace Business.Services
             {
                 this.fundooUserRL.Register(model);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -38,7 +38,7 @@ namespace Business.Services
             {
                 return this.fundooUserRL.Login(model);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -50,7 +50,7 @@ namespace Business.Services
             {
                 return this.fundooUserRL.ForgetPassword(model);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -62,7 +62,7 @@ namespace Business.Services
             {
                 return this.fundooUserRL.ResetPassword(model, email);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

@@ -24,7 +24,7 @@ namespace Business.Services
             {
                 this.fundooNotesRL.CreateNotes(model,jwtUserId);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
                 throw;
             }
@@ -36,7 +36,7 @@ namespace Business.Services
             {
                 return this.fundooNotesRL.GetAllNotes(jwtUserId);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
                 throw;
             }
@@ -48,7 +48,7 @@ namespace Business.Services
             {
                 return this.fundooNotesRL.GetNotesWithId(notesId,jwtUserId);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -60,7 +60,7 @@ namespace Business.Services
             {
                 this.fundooNotesRL.UpdateNotes(updateNotes, notes,jwtUserId);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -72,7 +72,7 @@ namespace Business.Services
             {
                 this.fundooNotesRL.DeleteNotes(notes,jwtUserId);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -84,7 +84,7 @@ namespace Business.Services
             {
                 return this.fundooNotesRL.PinningNotes(notesId, jwtUserId);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
                 throw;
             }
@@ -96,7 +96,7 @@ namespace Business.Services
             {
                 return this.fundooNotesRL.ArchivivingNotes(notesId, jwtUserId);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
                 throw;
             }
@@ -104,12 +104,26 @@ namespace Business.Services
 
         public string TrashingNotes(long notesId, long jwtUserId)
         {
-            return this.fundooNotesRL.TrashingNotes(notesId, jwtUserId);
+            try
+            {
+                return this.fundooNotesRL.TrashingNotes(notesId, jwtUserId);
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }
         }
 
         public void ColorNotes(FundooNotes colorNotes, ColorModel color, long jwtUserId)
         {
-            this.fundooNotesRL.ColorNotes(colorNotes, color, jwtUserId);
+            try
+            {
+                this.fundooNotesRL.ColorNotes(colorNotes, color, jwtUserId);
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }
         }
     }
 }
