@@ -69,7 +69,7 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "Email not in database" });
                 }
-                return Ok(new { Success = true, message = forgetPassword });
+                return Ok(new { Success = true, message = "Forget Password Mail Sent" });
             }
             catch (Exception ex)
             {

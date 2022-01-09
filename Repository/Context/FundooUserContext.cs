@@ -17,6 +17,20 @@ namespace Repository.Context
         public DbSet<FundooUser> UserTable { get; set; }
         public DbSet<FundooNotes> NotesTable { get; set; }
         public DbSet<FundooCollaborate> CollaboratorTable { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<FundooCollaborate>()
+                .HasKey(e => new { e.NotesId, e.UserId });
+            modelBuilder.Entity<FundooCollaborate>()
+                .HasOne(e => e.FundooNotes)
+                .WithMany(e => e.FundooCollaborate)
+                .HasForeignKey(e => e.NotesId);
+            modelBuilder.Entity<FundooCollaborate>()
+                .HasOne(e => e.FundooUser)
+                .WithMany(e => e.FundooCollaborate)
+                .HasForeignKey(e => e.UserId);
+        }
     }
 }
 

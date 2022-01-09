@@ -119,7 +119,7 @@ namespace Repository.Services
                 {
                     var token = JwtTokenGenerate(emailValidation.Email, emailValidation.UserId);
                     new MsmqModel().MsmqSender(token);
-                    return "Forget Passowrd Email Sent";
+                    return token;
                 }
                 else
                 {

@@ -8,24 +8,6 @@ namespace Repository.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "UserTable",
-                columns: table => new
-                {
-                    UserId = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(nullable: false),
-                    LastName = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
-                    Password = table.Column<string>(maxLength: 30, nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: true),
-                    ModifiedAt = table.Column<DateTime>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserTable", x => x.UserId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "NotesTable",
                 columns: table => new
                 {
@@ -46,42 +28,57 @@ namespace Repository.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_NotesTable", x => x.NotesId);
-                    table.ForeignKey(
-                        name: "FK_NotesTable_UserTable_UserId",
-                        column: x => x.UserId,
-                        principalTable: "UserTable",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserTable",
+                columns: table => new
+                {
+                    UserId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    Password = table.Column<string>(maxLength: 30, nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: true),
+                    ModifiedAt = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserTable", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "CollaboratorTable",
                 columns: table => new
                 {
+                    NotesId = table.Column<long>(nullable: false),
+                    UserId = table.Column<long>(nullable: false),
                     CollaboratorId = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NotesId = table.Column<long>(nullable: false),
                     Collaborated_Email = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CollaboratorTable", x => x.CollaboratorId);
+                    table.PrimaryKey("PK_CollaboratorTable", x => new { x.NotesId, x.UserId });
+                    table.UniqueConstraint("AK_CollaboratorTable_CollaboratorId", x => x.CollaboratorId);
                     table.ForeignKey(
                         name: "FK_CollaboratorTable_NotesTable_NotesId",
                         column: x => x.NotesId,
                         principalTable: "NotesTable",
                         principalColumn: "NotesId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CollaboratorTable_UserTable_UserId",
+                        column: x => x.UserId,
+                        principalTable: "UserTable",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CollaboratorTable_NotesId",
+                name: "IX_CollaboratorTable_UserId",
                 table: "CollaboratorTable",
-                column: "NotesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_NotesTable_UserId",
-                table: "NotesTable",
                 column: "UserId");
         }
 

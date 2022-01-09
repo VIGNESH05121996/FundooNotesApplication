@@ -17,18 +17,6 @@ namespace Business.Services
         {
             this.collaborateRL = collaborateRL;
         }
-        public void AddCollaborate(CollaborateModel model)
-        {
-            try
-            {
-                this.collaborateRL.AddCollaborate(model);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
 
         public FundooCollaborate GetCollabWithId(long collabId)
         {
@@ -38,7 +26,6 @@ namespace Business.Services
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
@@ -51,7 +38,18 @@ namespace Business.Services
             }
             catch (Exception ex)
             {
+                throw;
+            }
+        }
 
+        public void AddCollaborate(long notesId, long jwtUserId,CollaborateModel model)
+        {
+            try
+            {
+                this.collaborateRL.AddCollaborate(notesId,jwtUserId,model);
+            }
+            catch (Exception ex)
+            {
                 throw;
             }
         }

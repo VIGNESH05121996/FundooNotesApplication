@@ -18,7 +18,7 @@ namespace Repository.Services
         {
             this.context = context;
         }
-        public void CreateNotes(NotesModel model,long jwtUserId)
+        public void CreateNotes(NotesModel model, long jwtUserId)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace Repository.Services
                 this.context.Add(notes);
                 this.context.SaveChanges();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }
@@ -51,11 +51,11 @@ namespace Repository.Services
                 {
                     return this.context.NotesTable.Where(e => e.UserId == jwtUserId);
                 }
-                return null;    
+                return null;
             }
             catch (Exception ex)
             {
-                
+
                 throw;
             }
         }
@@ -65,7 +65,7 @@ namespace Repository.Services
             try
             {
                 var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
-                if(validUserId != null)
+                if (validUserId != null)
                 {
                     return this.context.NotesTable.FirstOrDefault(i => i.NotesId == notesId && i.UserId == jwtUserId);
                 }
@@ -89,7 +89,7 @@ namespace Repository.Services
                     updateNotes.Image = notes.Image;
                     updateNotes.ModifiedAt = notes.ModifiedAt;
                     this.context.SaveChanges();
-                } 
+                }
             }
             catch (Exception)
             {
@@ -106,7 +106,7 @@ namespace Repository.Services
                 {
                     this.context.NotesTable.Remove(notes);
                     this.context.SaveChanges();
-                }  
+                }
             }
             catch (Exception)
             {
@@ -126,15 +126,15 @@ namespace Repository.Services
                     {
                         pinNotes.Pin = true;
                         this.context.SaveChanges();
-                        return "Note Pinned";
+                        return "Notes Pinned";
                     }
                     var unPinNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Pin == true);
                     if (unPinNotes != null)
                     {
                         unPinNotes.Pin = false;
                         this.context.SaveChanges();
-                        return "Note Unpinned";
-                    } 
+                        return "Notes OnPinned";
+                    }
                 }
                 return null;
             }
@@ -168,7 +168,7 @@ namespace Repository.Services
                 }
                 return null;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 throw;
             }

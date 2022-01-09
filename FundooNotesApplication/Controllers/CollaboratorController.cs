@@ -1,5 +1,6 @@
 ﻿using Business.Interfaces;
 using Common.CollaboratorModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repository.Entities;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace FundooNotesApplication.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CollaboratorController : ControllerBase
@@ -20,21 +22,22 @@ namespace FundooNotesApplication.Controllers
             this.collaborateBL = collaborateBL;
         }
 
-        [HttpPost]
-        public IActionResult AddCollaborate(CollaborateModel model)
+        [HttpPost("Collaborate/{notesId}")]
+        public IActionResult AddCollaborate(long notesId, CollaborateModel model)
         {
             try
             {
-                if (model == null)
+                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                if (jwtUserId == 0 && notesId == 0)
                 {
                     return BadRequest(new { Success = false, message = "Email Missing For Collaboration" });
                 }
-                collaborateBL.AddCollaborate(model);
+                collaborateBL.AddCollaborate(notesId,jwtUserId,model);
                 return Ok(new { Success = true, message = "Collaboration Successfull " });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, Message = "No Notes With Particular NotesId", Exception_Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 

@@ -17,23 +17,6 @@ namespace Repository.Services
         {
             this.context = context;
         }
-        public void AddCollaborate(CollaborateModel model)
-        {
-            try
-            {
-                FundooCollaborate notes = new()
-                {
-                    NotesId=model.NotesId,
-                    Collaborated_Email=model.Collaborated_Email
-                };
-                this.context.Add(notes);
-                this.context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
 
         public FundooCollaborate GetCollabWithId(long collabId)
         {
@@ -52,6 +35,26 @@ namespace Repository.Services
             try
             {
                 this.context.CollaboratorTable.Remove(collab);
+                this.context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public void AddCollaborate(long notesId, long jwtUserId,CollaborateModel model)
+        {
+            try
+            {
+                var validNotesAndUser = this.context.NotesTable.Where(e => e.UserId == jwtUserId);
+                FundooCollaborate collaborate = new()
+                {
+                    NotesId = notesId,
+                    UserId=jwtUserId,
+                    Collaborated_Email = model.Collaborated_Email
+                };
+                this.context.Add(collaborate);
                 this.context.SaveChanges();
             }
             catch (Exception ex)

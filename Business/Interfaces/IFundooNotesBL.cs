@@ -11,7 +11,7 @@ namespace Business.Interfaces
 {
     public interface IFundooNotesBL
     {
-        void CreateNotes(NotesModel model,long jwtUserId);
+        void CreateNotes(NotesModel model, long jwtUserId);
         IEnumerable<FundooNotes> GetAllNotes(long jwtUserId);
         FundooNotes GetNotesWithId(long notesId, long jwtUserId);
         void UpdateNotes(FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId);

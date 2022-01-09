@@ -50,9 +50,8 @@ namespace Repository.Entities
         public DateTime? ModifiedAt { get; set; }
 
         public long UserId { get; set; }
-        [ForeignKey("UserId")]
 
-        public FundooUser FundooUser { get; set; }
+        public ICollection<FundooCollaborate> FundooCollaborate { get; set; }
 
     }
 }

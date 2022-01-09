@@ -21,20 +21,25 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Repository.Entities.FundooCollaborate", b =>
                 {
+                    b.Property<long>("NotesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Collaborated_Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("CollaboratorId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Collaborated_Email")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("NotesId", "UserId");
 
-                    b.Property<long>("NotesId")
-                        .HasColumnType("bigint");
+                    b.HasAlternateKey("CollaboratorId");
 
-                    b.HasKey("CollaboratorId");
-
-                    b.HasIndex("NotesId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("CollaboratorTable");
                 });
@@ -81,8 +86,6 @@ namespace Repository.Migrations
 
                     b.HasKey("NotesId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("NotesTable");
                 });
 
@@ -124,16 +127,13 @@ namespace Repository.Migrations
             modelBuilder.Entity("Repository.Entities.FundooCollaborate", b =>
                 {
                     b.HasOne("Repository.Entities.FundooNotes", "FundooNotes")
-                        .WithMany()
+                        .WithMany("FundooCollaborate")
                         .HasForeignKey("NotesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("Repository.Entities.FundooNotes", b =>
-                {
                     b.HasOne("Repository.Entities.FundooUser", "FundooUser")
-                        .WithMany("FundooNotes")
+                        .WithMany("FundooCollaborate")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

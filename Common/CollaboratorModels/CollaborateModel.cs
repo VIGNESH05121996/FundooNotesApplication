@@ -8,7 +8,6 @@ namespace Common.CollaboratorModels
 {
     public class CollaborateModel
     {
-        public long NotesId { get; set; }
         public string Collaborated_Email { get; set; }
     }
 }
