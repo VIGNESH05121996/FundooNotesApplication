@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Common.CollaboratorModels
 {
-    public class CollaborateModel
+    public class CollabResponseModel
     {
-        [DataType(DataType.EmailAddress)]
+        public long CollaboratorId { get; set; }
+        public long NotesId { get; set; }
+        public long UserId { get; set; }
         public string Collaborated_Email { get; set; }
     }
 }

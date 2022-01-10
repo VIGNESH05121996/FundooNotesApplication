@@ -44,6 +44,8 @@ namespace FundooNotesApplication
             services.AddTransient<IFundooNotesRL, FundooNotesRL>();
             services.AddTransient<ICollaborateBL, CollaborateBL>();
             services.AddTransient<ICollaborateRL, CollaborateRL>();
+            services.AddTransient<ILableBL, LableBL>();
+            services.AddTransient<ILableRL, LableRL>();
             services.AddAuthentication();
 
             services.AddDbContext<FundooUserContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:FundooAppDB"]));

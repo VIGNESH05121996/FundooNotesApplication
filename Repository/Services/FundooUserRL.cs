@@ -21,13 +21,17 @@ namespace Repository.Services
 
         private readonly IConfiguration _config;
 
-
         public FundooUserRL(FundooUserContext context, IConfiguration config)
         {
             this.context = context;
             _config = config;
         }
 
+        /// <summary>
+        /// Encrypteds the password.
+        /// </summary>
+        /// <param name="password">The password.</param>
+        /// <returns></returns>
         public static string EncryptedPassword(string password)
         {
             try
@@ -43,6 +47,12 @@ namespace Repository.Services
             }
         }
 
+        /// <summary>
+        /// JWTs the token generate.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
         public string JwtTokenGenerate(string email, long userId)
         {
             try
@@ -68,6 +78,10 @@ namespace Repository.Services
             }
         }
 
+        /// <summary>
+        /// Registers the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
         public void Register(RegistrationModel model)
         {
             try
@@ -89,6 +103,11 @@ namespace Repository.Services
             }
         }
 
+        /// <summary>
+        /// Logins the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         public string Login(LoginModel model)
         {
             try
@@ -110,6 +129,11 @@ namespace Repository.Services
             }
         }
 
+        /// <summary>
+        /// Forgets the password.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         public string ForgetPassword(ForgetPasswordModel model)
         {
             try
@@ -132,6 +156,12 @@ namespace Repository.Services
             }
         }
 
+        /// <summary>
+        /// Resets the password.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="email">The email.</param>
+        /// <returns></returns>
         public bool ResetPassword(ResetPasswordModel model,string email)
         {
             try

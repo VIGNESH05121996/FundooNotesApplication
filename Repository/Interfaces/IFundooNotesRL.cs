@@ -12,13 +12,14 @@ namespace Repository.Interfaces
     public interface IFundooNotesRL
     {
         void CreateNotes(NotesModel model, long jwtUserId);
-        IEnumerable<FundooNotes> GetAllNotes(long jwtUserId);
+        GetNotesResposeModel GetAllNotes(long jwtUserId);
         FundooNotes GetNotesWithId(long notesId, long jwtUserId);
+        GetNotesResposeModel GetNoteWithId(long notesId, long jwtUserId);
         void UpdateNotes(FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId);
         void DeleteNotes(FundooNotes notes, long jwtUserId);
-        string PinningNotes(long notesId, long jwtUserId);
-        string ArchivivingNotes(long notesId, long jwtUserId);
-        string TrashingNotes(long notesId, long jwtUserId);
+        GetNotesResposeModel PinningNotes(long notesId, long jwtUserId);
+        GetNotesResposeModel ArchivivingNotes(long notesId, long jwtUserId);
+        GetNotesResposeModel TrashingNotes(long notesId, long jwtUserId);
         void ColorNotes(FundooNotes colorNotes, ColorModel color, long jwtUserId);
     }
 }

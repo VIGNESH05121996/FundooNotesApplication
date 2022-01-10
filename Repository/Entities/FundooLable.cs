@@ -8,25 +8,24 @@ using System.Threading.Tasks;
 
 namespace Repository.Entities
 {
-    public class FundooCollaborate
+    public class FundooLable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long CollaboratorId { get; set; }
-
+        public long LableId { get; set; }
 
 
         public FundooNotes FundooNotes { get; set; }
+        [ForeignKey("FundooNotes")]
         public long NotesId { get; set; }
 
 
         public FundooUser FundooUser { get; set; }
+        [ForeignKey("FundooUser")]
         public long UserId { get; set; }
-        
-
 
 
         [DataType(DataType.EmailAddress)]
-        public string Collaborated_Email { get; set; }
+        public string Lable_Name { get; set; }
     }
 }

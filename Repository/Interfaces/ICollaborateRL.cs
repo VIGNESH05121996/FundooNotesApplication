@@ -10,9 +10,8 @@ namespace Repository.Interfaces
 {
     public interface ICollaborateRL
     {
-        //void AddCollaborate(CollaborateModel model);
         FundooCollaborate GetCollabWithId(long collabId);
         void DeleteCollab(FundooCollaborate collabId);
-        void AddCollaborate(long notesId, long jwtUserId,CollaborateModel model);
+        CollabResponseModel AddCollaborate(long notesId, long jwtUserId,CollaborateModel model);
     }
 }

@@ -23,6 +23,11 @@ namespace FundooNotesApplication.Controllers
             this.userBL = userBL;
         }
 
+        /// <summary>
+        /// Registers the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         [HttpPost("register")]
         public IActionResult Register(RegistrationModel model)
         {
@@ -41,6 +46,11 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Logins the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         [HttpPost("login")]
         public IActionResult Login(LoginModel model)
         {
@@ -59,6 +69,11 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Forgets the password.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         [HttpPost("ForgetPassword")]
         public IActionResult ForgetPassword(ForgetPasswordModel model)
         {
@@ -77,6 +92,11 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Resets the password.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         [Authorize]
         [HttpPut("ResetPassword")]
         public IActionResult ResetPassword(ResetPasswordModel model)

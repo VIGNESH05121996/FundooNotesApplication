@@ -49,9 +49,14 @@ namespace Repository.Entities
         [DataType(DataType.DateTime)]
         public DateTime? ModifiedAt { get; set; }
 
-        public long UserId { get; set; }
 
-        public ICollection<FundooCollaborate> FundooCollaborate { get; set; }
+        public long UserId { get; set; }
+        [ForeignKey("UserId")]
+        public FundooUser FundooUser { get; set; }
+
+
+        public virtual ICollection<FundooCollaborate> FundooCollaborate { get; set; }
+        public virtual ICollection<FundooLable> FundooLable { get; set; }
 
     }
 }

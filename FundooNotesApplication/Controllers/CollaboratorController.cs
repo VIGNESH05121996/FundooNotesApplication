@@ -22,7 +22,13 @@ namespace FundooNotesApplication.Controllers
             this.collaborateBL = collaborateBL;
         }
 
-        [HttpPost("Collaborate/{notesId}")]
+        /// <summary>
+        /// Adds the collaborate.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("{notesId}")]
         public IActionResult AddCollaborate(long notesId, CollaborateModel model)
         {
             try
@@ -32,8 +38,8 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "Email Missing For Collaboration" });
                 }
-                collaborateBL.AddCollaborate(notesId,jwtUserId,model);
-                return Ok(new { Success = true, message = "Collaboration Successfull " });
+                CollabResponseModel collaborate = collaborateBL.AddCollaborate(notesId,jwtUserId,model);
+                return Ok(new { Success = true, message = "Collaboration Successfull ",collaborate });
             }
             catch (Exception ex)
             {
@@ -41,6 +47,11 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes the collaborate.
+        /// </summary>
+        /// <param name="collabId">The collab identifier.</param>
+        /// <returns></returns>
         [HttpDelete("{collabId}")]
         public IActionResult DeleteCollaborate(long collabId)
         {

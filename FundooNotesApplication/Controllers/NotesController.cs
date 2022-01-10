@@ -23,6 +23,11 @@ namespace FundooNotesApplication.Controllers
             this.notesBL = notesBL;
         }
 
+        /// <summary>
+        /// Creates the notes.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult CreateNotes(NotesModel model)
         {
@@ -42,13 +47,17 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets all notes.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        public IActionResult GetAllData()
+        public IActionResult GetAllNotes()
         {
             try
             {
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                IEnumerable<FundooNotes> notes = notesBL.GetAllNotes(jwtUserId);
+                GetNotesResposeModel notes = notesBL.GetAllNotes(jwtUserId);
                 if (notes == null)
                 {
                     return BadRequest(new { Success = false, message = "No notes in database " });
@@ -61,13 +70,18 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets the notes with identifier.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <returns></returns>
         [HttpGet("{notesId}")]
         public IActionResult GetNotesWithId(long notesId)
         {
             try
             {
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                FundooNotes notes = notesBL.GetNotesWithId(notesId, jwtUserId);
+                GetNotesResposeModel notes = notesBL.GetNoteWithId(notesId, jwtUserId);
                 if (notes == null)
                 {
                     return BadRequest(new { Success = false, message = "No Notes With Particular NotesId " });
@@ -80,6 +94,12 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="notes">The notes.</param>
+        /// <returns></returns>
         [HttpPut("{notesId}")]
         public IActionResult UpdateNotes(long notesId, UpdateNotesModel notes)
         {
@@ -100,6 +120,11 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <returns></returns>
         [HttpDelete("{notesId}")]
         public IActionResult DeleteNotes(long notesId)
         {
@@ -120,6 +145,11 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Pinnings the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <returns></returns>
         [HttpPut("{notesId}/Pin")]
         public IActionResult PinningNotes(long notesId)
         {
@@ -131,7 +161,7 @@ namespace FundooNotesApplication.Controllers
                     return BadRequest(new { Status = false, Message = "No Notes available" });
                 }
                 var result = notesBL.PinningNotes(notesId, jwtUserId);
-                return Ok(new { Status = true, Message = result });
+                return Ok(new { Status = true, Message ="Pinning Note", result });
             }
             catch (Exception ex)
             {
@@ -139,6 +169,11 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Archivivings the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <returns></returns>
         [HttpPut("{notesId}/Archive")]
         public IActionResult ArchivivingNotes(long notesId)
         {
@@ -150,7 +185,7 @@ namespace FundooNotesApplication.Controllers
                     return BadRequest(new { Status = false, Message = "There is no notes with particuar NotesId" });
                 }
                 var result = notesBL.ArchivivingNotes(notesId, jwtUserId);
-                return Ok(new { Status = true, Message = result });
+                return Ok(new { Status = true, Message ="Archiving Note", result });
             }
             catch (Exception ex)
             {
@@ -158,6 +193,11 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Trashings the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <returns></returns>
         [HttpPut("{notesId}/Trash")]
         public IActionResult TrashingNotes(long notesId)
         {
@@ -169,7 +209,7 @@ namespace FundooNotesApplication.Controllers
                     return BadRequest(new { Status = false, Message = "There is no notes with particuar NotesId" });
                 }
                 var result = notesBL.TrashingNotes(notesId, jwtUserId);
-                return Ok(new { Status = true, Message = result });
+                return Ok(new { Status = true, Message ="Trashing Note", result });
             }
             catch (Exception ex)
             {
@@ -177,6 +217,12 @@ namespace FundooNotesApplication.Controllers
             }
         }
 
+        /// <summary>
+        /// Colors the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="color">The color.</param>
+        /// <returns></returns>
         [HttpPut("{notesId}/Color")]
         public IActionResult ColorNotes(long notesId, ColorModel color)
         {

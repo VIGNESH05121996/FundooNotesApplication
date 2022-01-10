@@ -10,9 +10,8 @@ namespace Business.Interfaces
 {
     public interface ICollaborateBL
     {
-        //void AddCollaborate(CollaborateModel model);
         FundooCollaborate GetCollabWithId(long collabId);
         void DeleteCollab(FundooCollaborate collab);
-        void AddCollaborate(long notesId, long jwtUserId,CollaborateModel model);
+        CollabResponseModel AddCollaborate(long notesId, long jwtUserId,CollaborateModel model);
     }
 }

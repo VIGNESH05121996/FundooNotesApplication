@@ -44,6 +44,9 @@ namespace Repository.Entities
         [DataType(DataType.DateTime)]
         public DateTime? ModifiedAt { get; set; }
 
-        public ICollection<FundooCollaborate> FundooCollaborate { get; set; }
+
+        public virtual ICollection<FundooNotes> FundooNotes { get; set; }
+        public virtual ICollection<FundooCollaborate> FundooCollaborate { get; set; }
+        public virtual ICollection<FundooLable> FundooLable { get; set; }
     }
 }

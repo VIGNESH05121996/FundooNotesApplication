@@ -18,6 +18,12 @@ namespace Repository.Services
         {
             this.context = context;
         }
+
+        /// <summary>
+        /// Creates the notes.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
         public void CreateNotes(NotesModel model, long jwtUserId)
         {
             try
@@ -42,14 +48,34 @@ namespace Repository.Services
             }
         }
 
-        public IEnumerable<FundooNotes> GetAllNotes(long jwtUserId)
+        /// <summary>
+        /// Gets all notes.
+        /// </summary>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <returns></returns>
+        public GetNotesResposeModel GetAllNotes(long jwtUserId)
         {
             try
             {
                 var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
-                    return this.context.NotesTable.Where(e => e.UserId == jwtUserId);
+                    var user = this.context.NotesTable.FirstOrDefault(e => e.UserId == jwtUserId);
+                    GetNotesResposeModel model = new()
+                    {
+                        UserId=user.UserId,
+                        NotesId=user.NotesId,
+                        Title = user.Title,
+                        Message=user.Message,
+                        Color=user.Color,
+                        Image=user.Image,
+                        Pin=user.Pin,
+                        Archive=user.Archive,
+                        Trash=user.Trash,
+                        CreatedAt=user.CreatedAt,
+                        ModifiedAt=user.ModifiedAt
+                    };
+                    return model;
                 }
                 return null;
             }
@@ -60,6 +86,50 @@ namespace Repository.Services
             }
         }
 
+        /// <summary>
+        /// Gets the note with identifier.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <returns></returns>
+        public GetNotesResposeModel GetNoteWithId(long notesId, long jwtUserId)
+        {
+            try
+            {
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
+                if (validUserId != null)
+                {
+                    var user= this.context.NotesTable.FirstOrDefault(i => i.NotesId == notesId && i.UserId == jwtUserId);
+                    GetNotesResposeModel model = new()
+                    {
+                        UserId = user.UserId,
+                        NotesId = user.NotesId,
+                        Title = user.Title,
+                        Message = user.Message,
+                        Color = user.Color,
+                        Image = user.Image,
+                        Pin = user.Pin,
+                        Archive = user.Archive,
+                        Trash = user.Trash,
+                        CreatedAt = user.CreatedAt,
+                        ModifiedAt = user.ModifiedAt
+                    };
+                    return model;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Gets the notes with identifier.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <returns></returns>
         public FundooNotes GetNotesWithId(long notesId, long jwtUserId)
         {
             try
@@ -77,6 +147,12 @@ namespace Repository.Services
             }
         }
 
+        /// <summary>
+        /// Updates the notes.
+        /// </summary>
+        /// <param name="updateNotes">The update notes.</param>
+        /// <param name="notes">The notes.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
         public void UpdateNotes(FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
         {
             try
@@ -97,6 +173,11 @@ namespace Repository.Services
             }
         }
 
+        /// <summary>
+        /// Deletes the notes.
+        /// </summary>
+        /// <param name="notes">The notes.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
         public void DeleteNotes(FundooNotes notes, long jwtUserId)
         {
             try
@@ -114,7 +195,13 @@ namespace Repository.Services
             }
         }
 
-        public string PinningNotes(long notesId, long jwtUserId)
+        /// <summary>
+        /// Pinnings the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <returns></returns>
+        public GetNotesResposeModel PinningNotes(long notesId, long jwtUserId)
         {
             try
             {
@@ -126,14 +213,50 @@ namespace Repository.Services
                     {
                         pinNotes.Pin = true;
                         this.context.SaveChanges();
-                        return "Notes Pinned";
+                        var user = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.UserId == jwtUserId && e.Pin == true);
+                        if (user != null)
+                        {
+                            GetNotesResposeModel model = new()
+                            {
+                                UserId = user.UserId,
+                                NotesId = user.NotesId,
+                                Title = user.Title,
+                                Message = user.Message,
+                                Color = user.Color,
+                                Image = user.Image,
+                                Pin = user.Pin,
+                                Archive = user.Archive,
+                                Trash = user.Trash,
+                                CreatedAt = user.CreatedAt,
+                                ModifiedAt = user.ModifiedAt
+                            };
+                            return model;
+                        }
                     }
                     var unPinNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Pin == true);
                     if (unPinNotes != null)
                     {
                         unPinNotes.Pin = false;
                         this.context.SaveChanges();
-                        return "Notes OnPinned";
+                        var user = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.UserId == jwtUserId && e.Pin == false);
+                        if (user != null)
+                        {
+                            GetNotesResposeModel model = new()
+                            {
+                                UserId = user.UserId,
+                                NotesId = user.NotesId,
+                                Title = user.Title,
+                                Message = user.Message,
+                                Color = user.Color,
+                                Image = user.Image,
+                                Pin = user.Pin,
+                                Archive = user.Archive,
+                                Trash = user.Trash,
+                                CreatedAt = user.CreatedAt,
+                                ModifiedAt = user.ModifiedAt
+                            };
+                            return model;
+                        }
                     }
                 }
                 return null;
@@ -144,7 +267,13 @@ namespace Repository.Services
             }
         }
 
-        public string ArchivivingNotes(long notesId, long jwtUserId)
+        /// <summary>
+        /// Archivivings the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <returns></returns>
+        public GetNotesResposeModel ArchivivingNotes(long notesId, long jwtUserId)
         {
             try
             {
@@ -156,14 +285,50 @@ namespace Repository.Services
                     {
                         archiveNotes.Archive = true;
                         this.context.SaveChanges();
-                        return "Note Archivied";
+                        var user = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.UserId == jwtUserId && e.Archive == true);
+                        if (user != null)
+                        {
+                            GetNotesResposeModel model = new()
+                            {
+                                UserId = user.UserId,
+                                NotesId = user.NotesId,
+                                Title = user.Title,
+                                Message = user.Message,
+                                Color = user.Color,
+                                Image = user.Image,
+                                Pin = user.Pin,
+                                Archive = user.Archive,
+                                Trash = user.Trash,
+                                CreatedAt = user.CreatedAt,
+                                ModifiedAt = user.ModifiedAt
+                            };
+                            return model;
+                        }
                     }
                     var unArchiveNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Archive == true);
                     if (unArchiveNotes != null)
                     {
                         unArchiveNotes.Archive = false;
                         this.context.SaveChanges();
-                        return "Note UnArchivied";
+                        var user = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.UserId == jwtUserId && e.Archive == false);
+                        if (user != null)
+                        {
+                            GetNotesResposeModel model = new()
+                            {
+                                UserId = user.UserId,
+                                NotesId = user.NotesId,
+                                Title = user.Title,
+                                Message = user.Message,
+                                Color = user.Color,
+                                Image = user.Image,
+                                Pin = user.Pin,
+                                Archive = user.Archive,
+                                Trash = user.Trash,
+                                CreatedAt = user.CreatedAt,
+                                ModifiedAt = user.ModifiedAt
+                            };
+                            return model;
+                        }
                     }
                 }
                 return null;
@@ -174,7 +339,13 @@ namespace Repository.Services
             }
         }
 
-        public string TrashingNotes(long notesId, long jwtUserId)
+        /// <summary>
+        /// Trashings the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <returns></returns>
+        public GetNotesResposeModel TrashingNotes(long notesId, long jwtUserId)
         {
             try
             {
@@ -186,14 +357,50 @@ namespace Repository.Services
                     {
                         trashNotes.Trash = true;
                         this.context.SaveChanges();
-                        return "Note Moved To Trash";
+                        var user = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.UserId == jwtUserId && e.Trash == true);
+                        if (user != null)
+                        {
+                            GetNotesResposeModel model = new()
+                            {
+                                UserId = user.UserId,
+                                NotesId = user.NotesId,
+                                Title = user.Title,
+                                Message = user.Message,
+                                Color = user.Color,
+                                Image = user.Image,
+                                Pin = user.Pin,
+                                Archive = user.Archive,
+                                Trash = user.Trash,
+                                CreatedAt = user.CreatedAt,
+                                ModifiedAt = user.ModifiedAt
+                            };
+                            return model;
+                        }
                     }
                     var unTrashNotes = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.Trash == true);
                     if (unTrashNotes != null)
                     {
                         unTrashNotes.Trash = false;
                         this.context.SaveChanges();
-                        return "Note UnTrashed";
+                        var user = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.UserId == jwtUserId && e.Trash == false);
+                        if (user != null)
+                        {
+                            GetNotesResposeModel model = new()
+                            {
+                                UserId = user.UserId,
+                                NotesId = user.NotesId,
+                                Title = user.Title,
+                                Message = user.Message,
+                                Color = user.Color,
+                                Image = user.Image,
+                                Pin = user.Pin,
+                                Archive = user.Archive,
+                                Trash = user.Trash,
+                                CreatedAt = user.CreatedAt,
+                                ModifiedAt = user.ModifiedAt
+                            };
+                            return model;
+                        }
                     }
                 }
                 return null;
@@ -204,6 +411,12 @@ namespace Repository.Services
             }
         }
 
+        /// <summary>
+        /// Colors the notes.
+        /// </summary>
+        /// <param name="colorNotes">The color notes.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
         public void ColorNotes(FundooNotes colorNotes, ColorModel color, long jwtUserId)
         {
             try

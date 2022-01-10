@@ -20,6 +20,10 @@ namespace Business.Services
             this.fundooUserRL = fundooUserRL;
         }
 
+        /// <summary>
+        /// Registers the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
         public void Register(RegistrationModel model)
         {
             try
@@ -32,6 +36,11 @@ namespace Business.Services
             }
         }
 
+        /// <summary>
+        /// Logins the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         public string Login(LoginModel model)
         {
             try
@@ -44,6 +53,11 @@ namespace Business.Services
             }
         }
 
+        /// <summary>
+        /// Forgets the password.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         public string ForgetPassword(ForgetPasswordModel model)
         {
             try
@@ -56,6 +70,12 @@ namespace Business.Services
             }
         }
 
+        /// <summary>
+        /// Resets the password.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="email">The email.</param>
+        /// <returns></returns>
         public bool ResetPassword(ResetPasswordModel model, string email)
         {
             try

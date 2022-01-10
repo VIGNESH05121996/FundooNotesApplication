@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.CollaboratorModels
+namespace Common.LableModel
 {
-    public class CollaborateModel
+    public class LableModel
     {
-        [DataType(DataType.EmailAddress)]
-        public string Collaborated_Email { get; set; }
+        [DataType(DataType.Text)]
+        public string Lable_Name { get; set; }
     }
 }

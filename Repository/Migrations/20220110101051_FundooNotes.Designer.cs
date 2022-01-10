@@ -10,7 +10,7 @@ using Repository.Context;
 namespace Repository.Migrations
 {
     [DbContext(typeof(FundooUserContext))]
-    [Migration("20220109063447_FundooNotes")]
+    [Migration("20220110101051_FundooNotes")]
     partial class FundooNotes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,27 +23,52 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Repository.Entities.FundooCollaborate", b =>
                 {
+                    b.Property<long>("CollaboratorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Collaborated_Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("NotesId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("Collaborated_Email")
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("CollaboratorId");
 
-                    b.Property<long>("CollaboratorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.HasKey("NotesId", "UserId");
-
-                    b.HasAlternateKey("CollaboratorId");
+                    b.HasIndex("NotesId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("CollaboratorTable");
+                });
+
+            modelBuilder.Entity("Repository.Entities.FundooLable", b =>
+                {
+                    b.Property<long>("LableId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Lable_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("NotesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("LableId");
+
+                    b.HasIndex("NotesId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LableTable");
                 });
 
             modelBuilder.Entity("Repository.Entities.FundooNotes", b =>
@@ -87,6 +112,8 @@ namespace Repository.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("NotesId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("NotesTable");
                 });
@@ -136,6 +163,30 @@ namespace Repository.Migrations
 
                     b.HasOne("Repository.Entities.FundooUser", "FundooUser")
                         .WithMany("FundooCollaborate")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Repository.Entities.FundooLable", b =>
+                {
+                    b.HasOne("Repository.Entities.FundooNotes", "FundooNotes")
+                        .WithMany("FundooLable")
+                        .HasForeignKey("NotesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Repository.Entities.FundooUser", "FundooUser")
+                        .WithMany("FundooLable")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Repository.Entities.FundooNotes", b =>
+                {
+                    b.HasOne("Repository.Entities.FundooUser", "FundooUser")
+                        .WithMany("FundooNotes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

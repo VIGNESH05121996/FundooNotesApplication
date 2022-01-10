@@ -18,6 +18,11 @@ namespace Business.Services
             this.collaborateRL = collaborateRL;
         }
 
+        /// <summary>
+        /// Gets the collab with identifier.
+        /// </summary>
+        /// <param name="collabId">The collab identifier.</param>
+        /// <returns></returns>
         public FundooCollaborate GetCollabWithId(long collabId)
         {
             try
@@ -30,6 +35,10 @@ namespace Business.Services
             }
         }
 
+        /// <summary>
+        /// Deletes the collab.
+        /// </summary>
+        /// <param name="collab">The collab.</param>
         public void DeleteCollab(FundooCollaborate collab)
         {
             try
@@ -42,11 +51,18 @@ namespace Business.Services
             }
         }
 
-        public void AddCollaborate(long notesId, long jwtUserId,CollaborateModel model)
+        /// <summary>
+        /// Adds the collaborate.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        public CollabResponseModel AddCollaborate(long notesId, long jwtUserId,CollaborateModel model)
         {
             try
             {
-                this.collaborateRL.AddCollaborate(notesId,jwtUserId,model);
+                return this.collaborateRL.AddCollaborate(notesId,jwtUserId,model);
             }
             catch (Exception ex)
             {
