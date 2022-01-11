@@ -1,10 +1,15 @@
-﻿using Common.Models;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Common.Models;
 using Common.NotesModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Repository.Context;
 using Repository.Entities;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +19,11 @@ namespace Repository.Services
     public class FundooNotesRL : IFundooNotesRL
     {
         readonly FundooUserContext context;
-        public FundooNotesRL(FundooUserContext context)
+        private readonly IConfiguration _config;
+        public FundooNotesRL(FundooUserContext context, IConfiguration config)
         {
             this.context = context;
+            _config = config;
         }
 
         /// <summary>
@@ -42,7 +49,7 @@ namespace Repository.Services
                 this.context.Add(notes);
                 this.context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -118,7 +125,7 @@ namespace Repository.Services
                 }
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -141,7 +148,7 @@ namespace Repository.Services
                 }
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -153,21 +160,23 @@ namespace Repository.Services
         /// <param name="updateNotes">The update notes.</param>
         /// <param name="notes">The notes.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public void UpdateNotes(FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
+        public void UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
         {
             try
             {
                 var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
-                    updateNotes.Title = notes.Title;
-                    updateNotes.Message = notes.Message;
-                    updateNotes.Image = notes.Image;
-                    updateNotes.ModifiedAt = notes.ModifiedAt;
-                    this.context.SaveChanges();
+                    if (this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId) != null)
+                    {
+                        updateNotes.Title = notes.Title;
+                        updateNotes.Message = notes.Message;
+                        updateNotes.ModifiedAt = notes.ModifiedAt;
+                        this.context.SaveChanges();
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -178,18 +187,21 @@ namespace Repository.Services
         /// </summary>
         /// <param name="notes">The notes.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public void DeleteNotes(FundooNotes notes, long jwtUserId)
+        public void DeleteNotes(long notesId, FundooNotes notes, long jwtUserId)
         {
             try
             {
                 var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
-                    this.context.NotesTable.Remove(notes);
-                    this.context.SaveChanges();
+                    if (this.context.NotesTable.FirstOrDefault(e=>e.NotesId==notesId) != null)
+                    {
+                        this.context.NotesTable.Remove(notes);
+                        this.context.SaveChanges();
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -261,7 +273,7 @@ namespace Repository.Services
                 }
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -333,7 +345,7 @@ namespace Repository.Services
                 }
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -405,7 +417,7 @@ namespace Repository.Services
                 }
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -417,19 +429,69 @@ namespace Repository.Services
         /// <param name="colorNotes">The color notes.</param>
         /// <param name="color">The color.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public void ColorNotes(FundooNotes colorNotes, ColorModel color, long jwtUserId)
+        public void ColorNotes(long notesId, FundooNotes colorNotes, ColorModel color, long jwtUserId)
         {
             try
             {
                 var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
-                    colorNotes.Color = color.Color;
-                    this.context.SaveChanges();
+                    if (this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId) != null)
+                    {
+                        colorNotes.Color = color.Color;
+                        this.context.SaveChanges();
+                    }  
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Images the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="imageNotes">The image notes.</param>
+        /// <param name="image">The image.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <returns></returns>
+        public ImageResponseModel ImageNotes(long notesId, FundooNotes imageNotes, IFormFile image, long jwtUserId)
+        {
+            try
+            {
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
+                if (validUserId != null)
+                {
+                    if (this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId) != null)
+                    {
+                        Account account = new Account(_config["Cloudinary:CloudName"], _config["Cloudinary:APIKey"], _config["Cloudinary:APISecret"]);
+                        var imagePath = image.OpenReadStream();
+                        Cloudinary cloudinary = new Cloudinary(account);
+                        ImageUploadParams imageParams = new ImageUploadParams()
+                        {
+                            File = new FileDescription(image.FileName, imagePath)
+                        };
+                        var uploadImage = cloudinary.Upload(imageParams).Url.ToString();
+                        imageNotes.Image = uploadImage;
+                        this.context.SaveChanges();
+                        var user = this.context.NotesTable.FirstOrDefault(e => e.NotesId == notesId && e.UserId == jwtUserId);
+                        if (user != null)
+                        {
+                            ImageResponseModel model = new()
+                            {
+                                Image = user.Image,
+                            };
+                            return model;
+                        }
+                    }  
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+
                 throw;
             }
         }

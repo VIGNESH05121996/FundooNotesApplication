@@ -100,12 +100,20 @@ namespace Repository.Services
         /// <returns></returns>
         public FundooLable GetLablesWithId(long lableId, long jwtUserId)
         {
-            var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
-            if (validUserId != null)
+            try
             {
-                 return this.context.LableTable.FirstOrDefault(e => e.LableId == lableId);
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
+                if (validUserId != null)
+                {
+                    return this.context.LableTable.FirstOrDefault(e => e.LableId == lableId);
+                }
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -157,7 +165,7 @@ namespace Repository.Services
                     this.context.SaveChanges();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

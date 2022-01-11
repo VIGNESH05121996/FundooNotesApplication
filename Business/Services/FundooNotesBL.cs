@@ -1,6 +1,7 @@
 ﻿using Business.Interfaces;
 using Common.Models;
 using Common.NotesModels;
+using Microsoft.AspNetCore.Http;
 using Repository.Entities;
 using Repository.Interfaces;
 using System;
@@ -96,11 +97,11 @@ namespace Business.Services
         /// <param name="notes">The notes.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
         /// <returns></returns>
-        public void UpdateNotes(FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
+        public void UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.UpdateNotes(updateNotes, notes, jwtUserId);
+                this.fundooNotesRL.UpdateNotes(notesId,updateNotes, notes, jwtUserId);
             }
             catch (Exception ex)
             {
@@ -114,11 +115,11 @@ namespace Business.Services
         /// <param name="notes">The notes.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
         /// <returns></returns>
-        public void DeleteNotes(FundooNotes notes, long jwtUserId)
+        public void DeleteNotes(long notesId, FundooNotes notes, long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.DeleteNotes(notes, jwtUserId);
+                this.fundooNotesRL.DeleteNotes(notesId,notes, jwtUserId);
             }
             catch (Exception ex)
             {
@@ -187,11 +188,30 @@ namespace Business.Services
         /// <param name="color">The color.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
         /// <returns></returns>
-        public void ColorNotes(FundooNotes colorNotes, ColorModel color, long jwtUserId)
+        public void ColorNotes(long notesId, FundooNotes colorNotes, ColorModel color, long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.ColorNotes(colorNotes, color, jwtUserId);
+                this.fundooNotesRL.ColorNotes(notesId,colorNotes, color, jwtUserId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Images the notes.
+        /// </summary>
+        /// <param name="imageNotes">The image notes.</param>
+        /// <param name="image">The image.</param>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <returns></returns>
+        public ImageResponseModel ImageNotes(long notesId, FundooNotes imageNotes, IFormFile image, long jwtUserId)
+        {
+            try
+            {
+                return this.fundooNotesRL.ImageNotes(notesId,imageNotes, image, jwtUserId);
             }
             catch (Exception ex)
             {

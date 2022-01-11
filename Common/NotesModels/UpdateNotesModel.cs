@@ -17,9 +17,6 @@ namespace Common.NotesModels
         [DataType(DataType.Text)]
         public string Message { get; set; }
 
-        [Display(Name = "Image")]
-        public string Image { get; set; }
-
         [Display(Name = "ModifiedAt")]
         [DataType(DataType.DateTime)]
         public DateTime? ModifiedAt { get; set; }

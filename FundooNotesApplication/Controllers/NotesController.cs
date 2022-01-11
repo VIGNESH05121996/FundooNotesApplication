@@ -111,7 +111,7 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
                 }
-                notesBL.UpdateNotes(updateNotes, notes, jwtUserId);
+                notesBL.UpdateNotes(notesId,updateNotes, notes, jwtUserId);
                 return Ok(new { Success = true, message = "Notes Updated Sucessfully" });
             }
             catch (Exception ex)
@@ -136,7 +136,7 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "Notes with entered notesId not found" });
                 }
-                notesBL.DeleteNotes(notes, jwtUserId);
+                notesBL.DeleteNotes(notesId,notes, jwtUserId);
                 return Ok(new { Success = true, message = "Notes Deleted From DataBase" });
             }
             catch (Exception ex)
@@ -234,8 +234,34 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
                 }
-                notesBL.ColorNotes(colorNotes, color, jwtUserId);
+                notesBL.ColorNotes(notesId,colorNotes, color, jwtUserId);
                 return Ok(new { Success = true, message = "Color Updated" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+            }
+        }
+
+        /// <summary>
+        /// Images the notes.
+        /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
+        /// <param name="image">The image.</param>
+        /// <returns></returns>
+        [HttpPut("{notesId}/Image")]
+        public IActionResult ImageNotes(long notesId,IFormFile image)
+        {
+            try
+            {
+                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                FundooNotes imageNotes = notesBL.GetNotesWithId(notesId, jwtUserId);
+                if (imageNotes == null)
+                {
+                    return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
+                }
+                ImageResponseModel imageDetails =notesBL.ImageNotes(notesId,imageNotes, image, jwtUserId);
+                return Ok(new { Success = true, message = "Image Uploaded", imageDetails});
             }
             catch (Exception ex)
             {
