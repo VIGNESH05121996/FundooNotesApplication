@@ -47,8 +47,8 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Data in notes" });
                 }
-                notesBL.CreateNotes(model, jwtUserId);
-                return Ok(new { Success = true, message = "Notes Created Successfully" });
+                GetNotesResposeModel notes =notesBL.CreateNotes(model, jwtUserId);
+                return Ok(new { Success = true, message = "Notes Created Successfully",notes });
             }
             catch (Exception ex)
             {
@@ -120,8 +120,8 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
                 }
-                notesBL.UpdateNotes(notesId,updateNotes, notes, jwtUserId);
-                return Ok(new { Success = true, message = "Notes Updated Sucessfully" });
+                GetNotesResposeModel note=notesBL.UpdateNotes(notesId,updateNotes, notes, jwtUserId);
+                return Ok(new { Success = true, message = "Notes Updated Sucessfully",note });
             }
             catch (Exception ex)
             {

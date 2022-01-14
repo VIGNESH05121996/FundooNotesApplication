@@ -25,11 +25,11 @@ namespace Business.Services
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public void CreateNotes(NotesModel model, long jwtUserId)
+        public GetNotesResposeModel CreateNotes(NotesModel model, long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.CreateNotes(model, jwtUserId);
+                return this.fundooNotesRL.CreateNotes(model, jwtUserId);
             }
             catch (Exception ex)
             {
@@ -97,11 +97,11 @@ namespace Business.Services
         /// <param name="notes">The notes.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
         /// <returns></returns>
-        public void UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
+        public GetNotesResposeModel UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.UpdateNotes(notesId,updateNotes, notes, jwtUserId);
+               return this.fundooNotesRL.UpdateNotes(notesId,updateNotes, notes, jwtUserId);
             }
             catch (Exception ex)
             {

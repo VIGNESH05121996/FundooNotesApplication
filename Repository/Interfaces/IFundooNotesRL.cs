@@ -12,11 +12,11 @@ namespace Repository.Interfaces
 {
     public interface IFundooNotesRL
     {
-        void CreateNotes(NotesModel model, long jwtUserId);
+        GetNotesResposeModel CreateNotes(NotesModel model, long jwtUserId);
         GetNotesResposeModel GetAllNotes(long jwtUserId);
         FundooNotes GetNotesWithId(long notesId, long jwtUserId);
         GetNotesResposeModel GetNoteWithId(long notesId, long jwtUserId);
-        void UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId);
+        GetNotesResposeModel UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId);
         void DeleteNotes(long notesId, FundooNotes notes, long jwtUserId);
         GetNotesResposeModel PinningNotes(long notesId, long jwtUserId);
         GetNotesResposeModel ArchivivingNotes(long notesId, long jwtUserId);

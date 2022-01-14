@@ -1,5 +1,6 @@
 ﻿using Business.Interfaces;
 using Common.Models;
+using Common.UserModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,8 +45,8 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "Details Missing" });
                 }
-                userBL.Register(model);
-                return Ok(new { Success = true, message = "Registration Successfull " });
+                RegistrationResponse user=userBL.Register(model);
+                return Ok(new { Success = true, message = "Registration Successfull ",user });
             }
             catch (Exception ex)
             {
@@ -153,7 +154,7 @@ namespace FundooNotesApplication.Controllers
                         return Ok(userList);
                     }
                 }
-                return BadRequest(new { Success = false, message = "No User Found With NotesId" });
+                return BadRequest(new { Success = false, message = "No User Found With UserId" });
             }
             catch (Exception ex)
             {

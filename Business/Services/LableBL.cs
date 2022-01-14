@@ -114,11 +114,11 @@ namespace Business.Services
         /// <param name="updateLable">The update lable.</param>
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public void UpdateLable(FundooLable updateLable, UpdateLableModel model, long jwtUserId)
+        public LableResponseModel UpdateLable(FundooLable updateLable, UpdateLableModel model, long jwtUserId)
         {
             try
             {
-                this.lableRL.UpdateLable(updateLable, model, jwtUserId);
+               return this.lableRL.UpdateLable(updateLable, model, jwtUserId);
             }
             catch (Exception ex)
             {
@@ -132,7 +132,7 @@ namespace Business.Services
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
         /// <returns></returns>
-        public FundooLable AddLable(LableModel model, long jwtUserId)
+        public LableResponseModel AddLable(LableModel model, long jwtUserId)
         {
             try
             {

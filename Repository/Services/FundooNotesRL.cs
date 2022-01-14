@@ -38,23 +38,42 @@ namespace Repository.Services
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public void CreateNotes(NotesModel model, long jwtUserId)
+        public GetNotesResposeModel CreateNotes(NotesModel model, long jwtUserId)
         {
             try
             {
-                FundooNotes notes = new()
+                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
+                if(validUserId != null)
                 {
-                    Title = model.Title,
-                    Message = model.Message,
-                    Color = model.Color,
-                    Image = model.Image,
-                    Archive = model.Archive,
-                    Pin = model.Pin,
-                    CreatedAt = model.CreatedAt,
-                    UserId = jwtUserId
-                };
-                this.context.Add(notes);
-                this.context.SaveChanges();
+                    FundooNotes notes = new()
+                    {
+                        Title = model.Title,
+                        Message = model.Message,
+                        Color = model.Color,
+                        Image = model.Image,
+                        Archive = model.Archive,
+                        Pin = model.Pin,
+                        CreatedAt = model.CreatedAt,
+                        UserId = jwtUserId
+                    };
+                    this.context.Add(notes);
+                    this.context.SaveChanges();
+                    GetNotesResposeModel models = new()
+                    {
+                        UserId = notes.UserId,
+                        NotesId = notes.NotesId,
+                        Title = notes.Title,
+                        Message = notes.Message,
+                        Color = notes.Color,
+                        Image = notes.Image,
+                        Pin = notes.Pin,
+                        Archive = notes.Archive,
+                        Trash = notes.Trash,
+                        CreatedAt=notes.CreatedAt
+                    };
+                    return models;
+                }
+               return null;
             }
             catch (Exception ex)
             {
@@ -166,7 +185,7 @@ namespace Repository.Services
         /// <param name="updateNotes">The update notes.</param>
         /// <param name="notes">The notes.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public void UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
+        public GetNotesResposeModel UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
         {
             try
             {
@@ -179,8 +198,26 @@ namespace Repository.Services
                         updateNotes.Message = notes.Message;
                         updateNotes.ModifiedAt = notes.ModifiedAt;
                         this.context.SaveChanges();
+
+                        var user = this.context.NotesTable.FirstOrDefault(i => i.NotesId == notesId && i.UserId == jwtUserId);
+                        GetNotesResposeModel model = new()
+                        {
+                            UserId = user.UserId,
+                            NotesId = user.NotesId,
+                            Title = user.Title,
+                            Message = user.Message,
+                            Color = user.Color,
+                            Image = user.Image,
+                            Pin = user.Pin,
+                            Archive = user.Archive,
+                            Trash = user.Trash,
+                            CreatedAt = user.CreatedAt,
+                            ModifiedAt = user.ModifiedAt
+                        };
+                        return model;
                     }
                 }
+                return null;
             }
             catch (Exception ex)
             {

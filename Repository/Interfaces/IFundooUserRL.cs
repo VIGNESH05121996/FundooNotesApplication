@@ -1,4 +1,5 @@
 ﻿using Common.Models;
+using Common.UserModels;
 using Repository.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Repository.Interfaces
 {
     public interface IFundooUserRL<TEntity>
     {
-        void Register(RegistrationModel model);
+        RegistrationResponse Register(RegistrationModel model);
         string Login(LoginModel model);
         string ForgetPassword(ForgetPasswordModel model);
         bool ResetPassword(ResetPasswordModel model,string email);

@@ -155,7 +155,7 @@ namespace Repository.Services
         /// <param name="updateLable">The update lable.</param>
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public void UpdateLable(FundooLable updateLable, UpdateLableModel model, long jwtUserId)
+        public LableResponseModel UpdateLable(FundooLable updateLable, UpdateLableModel model, long jwtUserId)
         {
             try
             {
@@ -165,7 +165,18 @@ namespace Repository.Services
                     updateLable.Lable_Name = model.Lable_Name;
                     updateLable.NotesId = model.NotesId;
                     this.context.SaveChanges();
+
+                    var response = this.context.LableTable.FirstOrDefault(e =>e.UserId == jwtUserId);
+                    LableResponseModel models = new()
+                    {
+                        LableId = response.LableId,
+                        NotesId = response.NotesId,
+                        UserId = response.UserId,
+                        Lable_Name = response.Lable_Name
+                    };
+                    return models;
                 }
+                return null;
             }
             catch (Exception ex)
             {
@@ -201,7 +212,7 @@ namespace Repository.Services
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
         /// <returns></returns>
-        public FundooLable AddLable(LableModel model, long jwtUserId)
+        public LableResponseModel AddLable(LableModel model, long jwtUserId)
         {
             try
             {
@@ -215,7 +226,15 @@ namespace Repository.Services
                     };
                     this.context.Add(lable);
                     this.context.SaveChanges();
-                    return lable;
+
+                    LableResponseModel models = new()
+                    {
+                        LableId = lable.LableId,
+                        NotesId = lable.NotesId,
+                        UserId = lable.UserId,
+                        Lable_Name = lable.Lable_Name
+                    };
+                    return models;
                 }
                 return null;
             }

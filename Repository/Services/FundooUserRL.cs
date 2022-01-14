@@ -1,4 +1,5 @@
 ﻿using Common.Models;
+using Common.UserModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -82,7 +83,7 @@ namespace Repository.Services
         /// Registers the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Register(RegistrationModel model)
+        public RegistrationResponse Register(RegistrationModel model)
         {
             try
             {
@@ -96,6 +97,13 @@ namespace Repository.Services
                 };
                 this.context.Add(user);
                 this.context.SaveChanges();
+                RegistrationResponse response = new()
+                {
+                    FirstName = user.FirstName,
+                    LastName=user.LastName,
+                    Email=user.Email
+                };
+                return response;
             }
             catch (Exception ex)
             {

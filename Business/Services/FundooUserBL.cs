@@ -1,5 +1,6 @@
 ﻿using Business.Interfaces;
 using Common.Models;
+using Common.UserModels;
 using Repository.Entities;
 using Repository.Interfaces;
 using Repository.Services;
@@ -24,11 +25,11 @@ namespace Business.Services
         /// Registers the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        public void Register(RegistrationModel model)
+        public RegistrationResponse Register(RegistrationModel model)
         {
             try
             {
-                this.fundooUserRL.Register(model);
+                return this.fundooUserRL.Register(model);
             }
             catch (Exception ex)
             {

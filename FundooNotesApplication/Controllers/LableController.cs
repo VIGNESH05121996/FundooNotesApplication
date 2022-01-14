@@ -111,8 +111,8 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
                 }
-                lableBL.UpdateLable(updateLable, model, jwtUserId);
-                return Ok(new { Success = true, message = "Lable Updated Sucessfully" });
+                LableResponseModel lable=lableBL.UpdateLable(updateLable, model, jwtUserId);
+                return Ok(new { Success = true, message = "Lable Updated Sucessfully",lable });
             }
             catch (Exception ex)
             {
@@ -160,7 +160,7 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
                 }
-                FundooLable addLable = lableBL.AddLable(model, jwtUserId);
+                LableResponseModel addLable = lableBL.AddLable(model, jwtUserId);
                 return Ok(new { Success = true, message = "Lable Updated Sucessfully", addLable });
             }
             catch (Exception ex)
