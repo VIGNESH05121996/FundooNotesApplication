@@ -1,20 +1,36 @@
-﻿using Business.Interfaces;
-using Common.Models;
-using Common.NotesModels;
-using Microsoft.AspNetCore.Http;
-using Repository.Entities;
-using Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="FundooNotesBL.cs" company="Fundoo Notes Application">
+//     FundooNotesBL copyright tag.
+// </copyright>
 
 namespace Business.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Business.Interfaces;
+    using Common.Models;
+    using Common.NotesModels;
+    using Microsoft.AspNetCore.Http;
+    using Repository.Entities;
+    using Repository.Interfaces;
+
+    /// <summary>
+    /// Business Layer Fundoo Notes
+    /// </summary>
+    /// <seealso cref="Business.Interfaces.IFundooNotesBL" />
     public class FundooNotesBL : IFundooNotesBL
     {
-        public IFundooNotesRL fundooNotesRL;
+        /// <summary>
+        /// The fundoo notes rl
+        /// </summary>
+        private IFundooNotesRL fundooNotesRL;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FundooNotesBL"/> class.
+        /// </summary>
+        /// <param name="fundooNotesRL">The fundoo notes rl.</param>
         public FundooNotesBL(IFundooNotesRL fundooNotesRL)
         {
             this.fundooNotesRL = fundooNotesRL;
@@ -25,7 +41,7 @@ namespace Business.Services
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public GetNotesResposeModel CreateNotes(NotesModel model, long jwtUserId)
+        public GetNotesResponseModel CreateNotes(NotesModel model, long jwtUserId)
         {
             try
             {
@@ -41,8 +57,7 @@ namespace Business.Services
         /// Gets all notes.
         /// </summary>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
-        public GetNotesResposeModel GetAllNotes(long jwtUserId)
+        public GetNotesResponseModel GetAllNotes(long jwtUserId)
         {
             try
             {
@@ -59,8 +74,7 @@ namespace Business.Services
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
-        public GetNotesResposeModel GetNoteWithId(long notesId, long jwtUserId)
+        public GetNotesResponseModel GetNoteWithId(long notesId, long jwtUserId)
         {
             try
             {
@@ -77,7 +91,6 @@ namespace Business.Services
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
         public FundooNotes GetNotesWithId(long notesId, long jwtUserId)
         {
             try
@@ -93,15 +106,15 @@ namespace Business.Services
         /// <summary>
         /// Updates the notes.
         /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
         /// <param name="updateNotes">The update notes.</param>
         /// <param name="notes">The notes.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
-        public GetNotesResposeModel UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
+        public GetNotesResponseModel UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
         {
             try
             {
-               return this.fundooNotesRL.UpdateNotes(notesId,updateNotes, notes, jwtUserId);
+               return this.fundooNotesRL.UpdateNotes(notesId, updateNotes, notes, jwtUserId);
             }
             catch (Exception ex)
             {
@@ -119,7 +132,7 @@ namespace Business.Services
         {
             try
             {
-                this.fundooNotesRL.DeleteNotes(notesId,notes, jwtUserId);
+                this.fundooNotesRL.DeleteNotes(notesId, notes, jwtUserId);
             }
             catch (Exception ex)
             {
@@ -132,8 +145,7 @@ namespace Business.Services
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
-        public GetNotesResposeModel PinningNotes(long notesId, long jwtUserId)
+        public GetNotesResponseModel PinningNotes(long notesId, long jwtUserId)
         {
             try
             {
@@ -146,16 +158,15 @@ namespace Business.Services
         }
 
         /// <summary>
-        /// Archivivings the notes.
+        /// Archivings the notes.
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
-        public GetNotesResposeModel ArchivivingNotes(long notesId, long jwtUserId)
+        public GetNotesResponseModel ArchivingNotes(long notesId, long jwtUserId)
         {
             try
             {
-                return this.fundooNotesRL.ArchivivingNotes(notesId, jwtUserId);
+                return this.fundooNotesRL.ArchivingNotes(notesId, jwtUserId);
             }
             catch (Exception ex)
             {
@@ -168,8 +179,7 @@ namespace Business.Services
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
-        public GetNotesResposeModel TrashingNotes(long notesId, long jwtUserId)
+        public GetNotesResponseModel TrashingNotes(long notesId, long jwtUserId)
         {
             try
             {
@@ -184,15 +194,15 @@ namespace Business.Services
         /// <summary>
         /// Colors the notes.
         /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
         /// <param name="colorNotes">The color notes.</param>
         /// <param name="color">The color.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
         public void ColorNotes(long notesId, FundooNotes colorNotes, ColorModel color, long jwtUserId)
         {
             try
             {
-                this.fundooNotesRL.ColorNotes(notesId,colorNotes, color, jwtUserId);
+                this.fundooNotesRL.ColorNotes(notesId, colorNotes, color, jwtUserId);
             }
             catch (Exception ex)
             {
@@ -203,15 +213,15 @@ namespace Business.Services
         /// <summary>
         /// Images the notes.
         /// </summary>
+        /// <param name="notesId">The notes identifier.</param>
         /// <param name="imageNotes">The image notes.</param>
         /// <param name="image">The image.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
         public ImageResponseModel ImageNotes(long notesId, FundooNotes imageNotes, IFormFile image, long jwtUserId)
         {
             try
             {
-                return this.fundooNotesRL.ImageNotes(notesId,imageNotes, image, jwtUserId);
+                return this.fundooNotesRL.ImageNotes(notesId, imageNotes, image, jwtUserId);
             }
             catch (Exception ex)
             {

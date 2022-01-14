@@ -1,42 +1,67 @@
-﻿using Business.Interfaces;
-using Common.Models;
-using Common.NotesModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
-using Repository.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="NotesController.cs" company="Fundoo Notes Application">
+//     NotesController copyright tag.
+// </copyright>
 
 namespace FundooNotesApplication.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Business.Interfaces;
+    using Common.Models;
+    using Common.NotesModels;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Caching.Distributed;
+    using Microsoft.Extensions.Caching.Memory;
+    using Newtonsoft.Json;
+    using Repository.Entities;
+
+    /// <summary>
+    /// NotescController
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class NotesController : ControllerBase
     {
-        public readonly IFundooNotesBL notesBL;
+        /// <summary>
+        /// The notes bl
+        /// </summary>
+        private readonly IFundooNotesBL notesBL;
+
+        /// <summary>
+        /// The memory cache
+        /// </summary>
         private readonly IMemoryCache memoryCache;
+
+        /// <summary>
+        /// The distributed cache
+        /// </summary>
         private readonly IDistributedCache distributedCache;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotesController"/> class.
+        /// </summary>
+        /// <param name="notesBL">The notes bl.</param>
+        /// <param name="memoryCache">The memory cache.</param>
+        /// <param name="distributedCache">The distributed cache.</param>
         public NotesController(IFundooNotesBL notesBL,IMemoryCache memoryCache, IDistributedCache distributedCache)
         {
             this.notesBL = notesBL;
             this.memoryCache = memoryCache;
             this.distributedCache = distributedCache;
-
         }
 
         /// <summary>
         /// Creates the notes.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Response Body after creating notes</returns>
         [HttpPost]
         public IActionResult CreateNotes(NotesModel model)
         {
@@ -47,26 +72,26 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Data in notes" });
                 }
-                GetNotesResposeModel notes =notesBL.CreateNotes(model, jwtUserId);
-                return Ok(new { Success = true, message = "Notes Created Successfully",notes });
+                GetNotesResponseModel notes = notesBL.CreateNotes(model, jwtUserId);
+                return Ok(new { Success = true, message = "Notes Created Successfully", notes });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
         /// <summary>
         /// Gets all notes.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Response Body of all notes</returns>
         [HttpGet]
         public IActionResult GetAllNotes()
         {
             try
             {
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                GetNotesResposeModel notes = notesBL.GetAllNotes(jwtUserId);
+                GetNotesResponseModel notes = notesBL.GetAllNotes(jwtUserId);
                 if (notes == null)
                 {
                     return BadRequest(new { Success = false, message = "No notes in database " });
@@ -75,7 +100,7 @@ namespace FundooNotesApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -83,14 +108,14 @@ namespace FundooNotesApplication.Controllers
         /// Gets the notes with identifier.
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
-        /// <returns></returns>
+        /// <returns>Response Body of notes with particular notesId</returns>
         [HttpGet("{notesId}")]
         public IActionResult GetNotesWithId(long notesId)
         {
             try
             {
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                GetNotesResposeModel notes = notesBL.GetNoteWithId(notesId, jwtUserId);
+                GetNotesResponseModel notes = notesBL.GetNoteWithId(notesId, jwtUserId);
                 if (notes == null)
                 {
                     return BadRequest(new { Success = false, message = "No Notes With Particular NotesId " });
@@ -99,7 +124,7 @@ namespace FundooNotesApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -108,7 +133,7 @@ namespace FundooNotesApplication.Controllers
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="notes">The notes.</param>
-        /// <returns></returns>
+        /// <returns>Response Body after updating notes</returns>
         [HttpPut("{notesId}")]
         public IActionResult UpdateNotes(long notesId, UpdateNotesModel notes)
         {
@@ -120,12 +145,12 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
                 }
-                GetNotesResposeModel note=notesBL.UpdateNotes(notesId,updateNotes, notes, jwtUserId);
-                return Ok(new { Success = true, message = "Notes Updated Sucessfully",note });
+                GetNotesResponseModel note = notesBL.UpdateNotes(notesId, updateNotes, notes, jwtUserId);
+                return Ok(new { Success = true, message = "Notes Updated Sucessfully", note });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -133,7 +158,7 @@ namespace FundooNotesApplication.Controllers
         /// Deletes the notes.
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
-        /// <returns></returns>
+        /// <returns>Delete message</returns>
         [HttpDelete("{notesId}")]
         public IActionResult DeleteNotes(long notesId)
         {
@@ -145,12 +170,12 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "Notes with entered notesId not found" });
                 }
-                notesBL.DeleteNotes(notesId,notes, jwtUserId);
+                notesBL.DeleteNotes(notesId, notes, jwtUserId);
                 return Ok(new { Success = true, message = "Notes Deleted From DataBase" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -158,7 +183,7 @@ namespace FundooNotesApplication.Controllers
         /// Pinnings the notes.
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
-        /// <returns></returns>
+        /// <returns>Response Body of pinned notes</returns>
         [HttpPut("{notesId}/Pin")]
         public IActionResult PinningNotes(long notesId)
         {
@@ -167,14 +192,14 @@ namespace FundooNotesApplication.Controllers
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (notesBL.GetNotesWithId(notesId, jwtUserId) == null)
                 {
-                    return BadRequest(new { Status = false, Message = "No Notes available" });
+                    return BadRequest(new { Status = false, message = "No Notes available" });
                 }
                 var result = notesBL.PinningNotes(notesId, jwtUserId);
-                return Ok(new { Status = true, Message ="Pinning Note", result });
+                return Ok(new { Status = true, message ="Pinning Note", result });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -182,7 +207,7 @@ namespace FundooNotesApplication.Controllers
         /// Archivivings the notes.
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
-        /// <returns></returns>
+        /// <returns>Response Body of archived notes</returns>
         [HttpPut("{notesId}/Archive")]
         public IActionResult ArchivivingNotes(long notesId)
         {
@@ -191,14 +216,14 @@ namespace FundooNotesApplication.Controllers
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (notesBL.GetNotesWithId(notesId, jwtUserId) == null)
                 {
-                    return BadRequest(new { Status = false, Message = "There is no notes with particuar NotesId" });
+                    return BadRequest(new { Status = false, message = "There is no notes with particuar NotesId" });
                 }
-                var result = notesBL.ArchivivingNotes(notesId, jwtUserId);
-                return Ok(new { Status = true, Message ="Archiving Note", result });
+                var result = notesBL.ArchivingNotes(notesId, jwtUserId);
+                return Ok(new { Status = true, message ="Archiving Note", result });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -206,7 +231,7 @@ namespace FundooNotesApplication.Controllers
         /// Trashings the notes.
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
-        /// <returns></returns>
+        /// <returns>Response Body of trashed notes</returns>
         [HttpPut("{notesId}/Trash")]
         public IActionResult TrashingNotes(long notesId)
         {
@@ -215,14 +240,14 @@ namespace FundooNotesApplication.Controllers
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (notesBL.GetNotesWithId(notesId, jwtUserId) == null)
                 {
-                    return BadRequest(new { Status = false, Message = "There is no notes with particuar NotesId" });
+                    return BadRequest(new { Status = false, message = "There is no notes with particuar NotesId" });
                 }
                 var result = notesBL.TrashingNotes(notesId, jwtUserId);
-                return Ok(new { Status = true, Message ="Trashing Note", result });
+                return Ok(new { Status = true, message ="Trashing Note", result });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -231,7 +256,7 @@ namespace FundooNotesApplication.Controllers
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="color">The color.</param>
-        /// <returns></returns>
+        /// <returns>Colored Message</returns>
         [HttpPut("{notesId}/Color")]
         public IActionResult ColorNotes(long notesId, ColorModel color)
         {
@@ -243,12 +268,12 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
                 }
-                notesBL.ColorNotes(notesId,colorNotes, color, jwtUserId);
+                notesBL.ColorNotes(notesId, colorNotes, color, jwtUserId);
                 return Ok(new { Success = true, message = "Color Updated" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -257,7 +282,7 @@ namespace FundooNotesApplication.Controllers
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="image">The image.</param>
-        /// <returns></returns>
+        /// <returns>Response Body cloudinary image URL</returns>
         [HttpPut("{notesId}/Image")]
         public IActionResult ImageNotes(long notesId,IFormFile image)
         {
@@ -269,19 +294,19 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
                 }
-                ImageResponseModel imageDetails =notesBL.ImageNotes(notesId,imageNotes, image, jwtUserId);
+                ImageResponseModel imageDetails = notesBL.ImageNotes(notesId, imageNotes, image, jwtUserId);
                 return Ok(new { Success = true, message = "Image Uploaded", imageDetails});
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
         /// <summary>
         /// Redises the catching fundoo notes.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Response Body of all notes</returns>
         [HttpGet("redis")]
         public async Task<IActionResult> RedisCatchingFundooNotes()
         {
@@ -311,7 +336,7 @@ namespace FundooNotesApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
     }

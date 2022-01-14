@@ -1,39 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="RegistrationModel.cs" company="Fundoo Notes Application">
+//     RegistrationModel copyright tag.
+// </copyright>
 
 namespace Common.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    /// <summary>
+    /// Registration Model
+    /// </summary>
     public class RegistrationModel
     {
-        [Required(ErrorMessage = "First Name is required")]
-        [DataType(DataType.Text)]
-        [Display(Name = "First Name")]
-        [RegularExpression("^[a-zA-Z]{3,}", ErrorMessage = "First Name should contain minimum 3 characters")]
+        /// <summary>
+        /// Gets or sets the first name.
+        /// </summary>
+        /// <value>
+        /// The first name.
+        /// </value>
         public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Last Name Is required")]
-        [DataType(DataType.Text)]
-        [Display(Name = "Last Name")]
-        [RegularExpression("^[a-zA-Z]{1,}", ErrorMessage = "Last Name should not be empty")]
+        /// <summary>
+        /// Gets or sets the last name.
+        /// </summary>
+        /// <value>
+        /// The last name.
+        /// </value>
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
-        [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email")]
-        [RegularExpression(@"^[a-zA-Z0-9]+[+-._]?[a-zA-Z0-9]*[+-._]?[a-zA-Z0-9]+@[a-zA-Z0-9]+[.]{1}[a-zA-Z]{2,3}[.]?[a-zA-Z]{0,3}$", ErrorMessage = "Enter a valid email")]
+        /// <summary>
+        /// Gets or sets the email.
+        /// </summary>
+        /// <value>
+        /// The email.
+        /// </value>
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Password Is required")]
-        [DataType(DataType.Password)]
-        [StringLength(30, MinimumLength = 6, ErrorMessage = "Password should contain minimum 6 characters")]
-        [Display(Name = "Password Name")]
+        /// <summary>
+        /// Gets or sets the password.
+        /// </summary>
+        /// <value>
+        /// The password.
+        /// </value>
         public string Password { get; set; }
 
-        [DataType(DataType.DateTime)]
+        /// <summary>
+        /// Gets or sets the created at.
+        /// </summary>
+        /// <value>
+        /// The created at.
+        /// </value>
         public DateTime? CreatedAt { get; set; }
     }
 }

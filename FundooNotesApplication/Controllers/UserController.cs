@@ -1,29 +1,55 @@
-﻿using Business.Interfaces;
-using Common.Models;
-using Common.UserModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
-using Repository.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="UserController.cs" company="Fundoo Notes Application">
+//     UserController copyright tag.
+// </copyright>
 
 namespace FundooNotesApplication.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Business.Interfaces;
+    using Common.Models;
+    using Common.UserModels;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Caching.Distributed;
+    using Microsoft.Extensions.Caching.Memory;
+    using Newtonsoft.Json;
+    using Repository.Entities;
+
+    /// <summary>
+    /// User Controller
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        public readonly IFundooUserBL<FundooUser> userBL;
+        /// <summary>
+        /// The user bl
+        /// </summary>
+        private readonly IFundooUserBL<FundooUser> userBL;
+
+        /// <summary>
+        /// The memory cache
+        /// </summary>
         private readonly IMemoryCache memoryCache;
+
+        /// <summary>
+        /// The distributed cache
+        /// </summary>
         private readonly IDistributedCache distributedCache;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserController"/> class.
+        /// </summary>
+        /// <param name="userBL">The user bl.</param>
+        /// <param name="memoryCache">The memory cache.</param>
+        /// <param name="distributedCache">The distributed cache.</param>
         public UserController(IFundooUserBL<FundooUser> userBL, IMemoryCache memoryCache, IDistributedCache distributedCache)
         {
             this.userBL = userBL;
@@ -35,7 +61,7 @@ namespace FundooNotesApplication.Controllers
         /// Registers the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Response Body after registration</returns>
         [HttpPost("register")]
         public IActionResult Register(RegistrationModel model)
         {
@@ -45,12 +71,12 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "Details Missing" });
                 }
-                RegistrationResponse user=userBL.Register(model);
-                return Ok(new { Success = true, message = "Registration Successfull ",user });
+                RegistrationResponse user = userBL.Register(model);
+                return Ok(new { Success = true, message = "Registration Successfull ", user });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -58,7 +84,7 @@ namespace FundooNotesApplication.Controllers
         /// Logins the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Json Web Token after login</returns>
         [HttpPost("login")]
         public IActionResult Login(LoginModel model)
         {
@@ -69,11 +95,11 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "Email or Password Not Found" });
                 }
-                return Ok(new { Success = true, message = "Login Successful",JwtToken=credentials});
+                return Ok(new { Success = true, message = "Login Successful", JwtToken = credentials});
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -81,7 +107,7 @@ namespace FundooNotesApplication.Controllers
         /// Forgets the password.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Email Sent message</returns>
         [HttpPost("ForgetPassword")]
         public IActionResult ForgetPassword(ForgetPasswordModel model)
         {
@@ -96,7 +122,7 @@ namespace FundooNotesApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -104,7 +130,7 @@ namespace FundooNotesApplication.Controllers
         /// Resets the password.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Password reset message</returns>
         [Authorize]
         [HttpPut("ResetPassword")]
         public IActionResult ResetPassword(ResetPasswordModel model)
@@ -112,7 +138,7 @@ namespace FundooNotesApplication.Controllers
             try
             {
                 var email = User.FindFirst(ClaimTypes.Email).Value.ToString();
-                bool resetPassword = userBL.ResetPassword(model,email);
+                bool resetPassword = userBL.ResetPassword(model, email);
                 if (resetPassword)
                 {
                     return Ok(new { Success = true, message = "Password Reset Successful" });
@@ -121,14 +147,14 @@ namespace FundooNotesApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
         /// <summary>
         /// Redises the catching fundoo user.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>All user in data base</returns>
         [HttpGet("redis")]
         public async Task<IActionResult> RedisCatchingFundooUser()
         {
@@ -158,7 +184,7 @@ namespace FundooNotesApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
     }

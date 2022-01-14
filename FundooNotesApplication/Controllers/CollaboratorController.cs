@@ -1,22 +1,38 @@
-﻿using Business.Interfaces;
-using Common.CollaboratorModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Repository.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// <copyright file="CollaboratorController.cs" company="Fundoo Notes Application">
+//     CollaboratorController copyright tag.
+// </copyright>
 
 namespace FundooNotesApplication.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Business.Interfaces;
+    using Common.CollaboratorModels;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Repository.Entities;
+
+    /// <summary>
+    /// Collaborator Controller
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CollaboratorController : ControllerBase
     {
-        readonly ICollaborateBL collaborateBL;
+        /// <summary>
+        /// The collaborate bl
+        /// </summary>
+        private readonly ICollaborateBL collaborateBL;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CollaboratorController"/> class.
+        /// </summary>
+        /// <param name="collaborateBL">The collaborate bl.</param>
         public CollaboratorController(ICollaborateBL collaborateBL)
         {
             this.collaborateBL = collaborateBL;
@@ -27,7 +43,7 @@ namespace FundooNotesApplication.Controllers
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Respose Body After Adding Collaborator to Data base</returns>
         [HttpPost("{notesId}")]
         public IActionResult AddCollaborate(long notesId, CollaborateModel model)
         {
@@ -38,12 +54,12 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "Email Missing For Collaboration" });
                 }
-                CollabResponseModel collaborate = collaborateBL.AddCollaborate(notesId,jwtUserId,model);
-                return Ok(new { Success = true, message = "Collaboration Successfull ",collaborate });
+                CollabResponseModel collaborate = collaborateBL.AddCollaborate(notesId, jwtUserId, model);
+                return Ok(new { Success = true, message = "Collaboration Successfull ", collaborate });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = "No Notes With Particular NotesId", Exception_Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = "No Notes With Particular NotesId", Exception_Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -51,7 +67,7 @@ namespace FundooNotesApplication.Controllers
         /// Deletes the collaborate.
         /// </summary>
         /// <param name="collabId">The collab identifier.</param>
-        /// <returns></returns>
+        /// <returns>Delete Message</returns>
         [HttpDelete("{collabId}")]
         public IActionResult DeleteCollaborate(long collabId)
         {
@@ -67,7 +83,7 @@ namespace FundooNotesApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
     }

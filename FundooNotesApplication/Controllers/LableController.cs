@@ -1,22 +1,38 @@
-﻿using Business.Interfaces;
-using Common.LableModel;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Repository.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// <copyright file="LableController.cs" company="Fundoo Notes Application">
+//     LableController copyright tag.
+// </copyright>
 
 namespace FundooNotesApplication.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Business.Interfaces;
+    using Common.LableModel;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Repository.Entities;
+
+    /// <summary>
+    /// Lable Controller
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LableController : ControllerBase
     {
-        readonly ILableBL lableBL;
+        /// <summary>
+        /// The lable bl
+        /// </summary>
+        private readonly ILableBL lableBL;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LableController"/> class.
+        /// </summary>
+        /// <param name="lableBL">The lable bl.</param>
         public LableController(ILableBL lableBL)
         {
             this.lableBL = lableBL;
@@ -27,7 +43,7 @@ namespace FundooNotesApplication.Controllers
         /// </summary>
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Response Body After creating lable</returns>
         [HttpPost("{notesId}")]
         public IActionResult CreateLable(long notesId, LableModel model)
         {
@@ -39,18 +55,18 @@ namespace FundooNotesApplication.Controllers
                     return BadRequest(new { Success = false, message = "Name Missing For Lable" });
                 }
                 LableResponseModel lable=lableBL.CreateLable(notesId, jwtUserId, model);
-                return Ok(new { Success = true, message = "Lable Created",lable });
+                return Ok(new { Success = true, message = "Lable Created", lable });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = "No Notes With Particular NotesId", Exception_Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = "No Notes With Particular NotesId", Exception_Message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
         /// <summary>
         /// Gets all lable.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Response body of all lables</returns>
         [HttpGet]
         public IActionResult GetAllLable()
         {
@@ -66,7 +82,7 @@ namespace FundooNotesApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -74,7 +90,7 @@ namespace FundooNotesApplication.Controllers
         /// Gets the lable with identifier.
         /// </summary>
         /// <param name="lableId">The lable identifier.</param>
-        /// <returns></returns>
+        /// <returns>Response Body of lable with particular lableId</returns>
         [HttpGet("{lableId}")]
         public IActionResult GetLableWithId(long lableId)
         {
@@ -90,7 +106,7 @@ namespace FundooNotesApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -99,7 +115,7 @@ namespace FundooNotesApplication.Controllers
         /// </summary>
         /// <param name="lableId">The lable identifier.</param>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Respose Body after updating the lable</returns>
         [HttpPut("{lableId}")]
         public IActionResult UpdateLable(long lableId, UpdateLableModel model)
         {
@@ -111,12 +127,12 @@ namespace FundooNotesApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
                 }
-                LableResponseModel lable=lableBL.UpdateLable(updateLable, model, jwtUserId);
-                return Ok(new { Success = true, message = "Lable Updated Sucessfully",lable });
+                LableResponseModel lable = lableBL.UpdateLable(updateLable, model, jwtUserId);
+                return Ok(new { Success = true, message = "Lable Updated Sucessfully", lable });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -124,24 +140,24 @@ namespace FundooNotesApplication.Controllers
         /// Deletes the lable.
         /// </summary>
         /// <param name="lableId">The lable identifier.</param>
-        /// <returns></returns>
+        /// <returns>Delete Message</returns>
         [HttpDelete("{lableId}")]
         public IActionResult DeleteLable(long lableId)
         {
             try
             {
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                FundooLable lable = lableBL.GetLablesWithId(lableId,jwtUserId);
+                FundooLable lable = lableBL.GetLablesWithId(lableId, jwtUserId);
                 if (lable == null)
                 {
                     return BadRequest(new { Success = false, message = "No Lable Found" });
                 }
-                lableBL.DeleteLable(lable,jwtUserId);
+                lableBL.DeleteLable(lable, jwtUserId);
                 return Ok(new { Success = true, message = "Lable Removed" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -149,7 +165,7 @@ namespace FundooNotesApplication.Controllers
         /// Adds the lable.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Response Body after adding lable</returns>
         [HttpPost("AddLable")]
         public IActionResult AddLable(LableModel model)
         {
@@ -165,7 +181,7 @@ namespace FundooNotesApplication.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
     }

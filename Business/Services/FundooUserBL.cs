@@ -1,21 +1,36 @@
-﻿using Business.Interfaces;
-using Common.Models;
-using Common.UserModels;
-using Repository.Entities;
-using Repository.Interfaces;
-using Repository.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="FundooUserBL.cs" company="Fundoo Notes Application">
+//     FundooUserBL copyright tag.
+// </copyright>
 
 namespace Business.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Business.Interfaces;
+    using Common.Models;
+    using Common.UserModels;
+    using Repository.Entities;
+    using Repository.Interfaces;
+    using Repository.Services;
+
+    /// <summary>
+    /// Business Layer for Fundoo User
+    /// </summary>
+    /// <seealso cref="Business.Interfaces.IFundooUserBL&lt;Repository.Entities.FundooUser&gt;" />
     public class FundooUserBL : IFundooUserBL<FundooUser>
     {
-        public Repository.Interfaces.IFundooUserRL<FundooUser> fundooUserRL;
+        /// <summary>
+        /// The fundoo user rl
+        /// </summary>
+        private Repository.Interfaces.IFundooUserRL<FundooUser> fundooUserRL;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FundooUserBL"/> class.
+        /// </summary>
+        /// <param name="fundooUserRL">The fundoo user rl.</param>
         public FundooUserBL(IFundooUserRL<FundooUser> fundooUserRL)
         {
             this.fundooUserRL = fundooUserRL;
@@ -40,8 +55,7 @@ namespace Business.Services
         /// <summary>
         /// Logins the specified model.
         /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <param name="model"></param>
         public string Login(LoginModel model)
         {
             try
@@ -58,7 +72,6 @@ namespace Business.Services
         /// Forgets the password.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
         public string ForgetPassword(ForgetPasswordModel model)
         {
             try
@@ -76,7 +89,6 @@ namespace Business.Services
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="email">The email.</param>
-        /// <returns></returns>
         public bool ResetPassword(ResetPasswordModel model, string email)
         {
             try
@@ -92,7 +104,6 @@ namespace Business.Services
         /// <summary>
         /// Redises the user.
         /// </summary>
-        /// <returns></returns>
         public List<FundooUser> RedisUser()
         {
             try

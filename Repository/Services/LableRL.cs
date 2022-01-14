@@ -1,19 +1,35 @@
-﻿using Common.LableModel;
-using Common.NotesModels;
-using Repository.Context;
-using Repository.Entities;
-using Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="LableRL.cs" company="Fundoo Notes Application">
+//     LableRL copyright tag.
+// </copyright>
 
 namespace Repository.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Common.LableModel;
+    using Common.NotesModels;
+    using Repository.Context;
+    using Repository.Entities;
+    using Repository.Interfaces;
+
+    /// <summary>
+    /// Repository Layer Lable Table
+    /// </summary>
+    /// <seealso cref="Repository.Interfaces.ILableRL" />
     public class LableRL : ILableRL
     {
-        readonly FundooUserContext context;
+        /// <summary>
+        /// The context
+        /// </summary>
+        private readonly FundooUserContext context;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LableRL"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public LableRL(FundooUserContext context)
         {
             this.context = context;
@@ -25,36 +41,29 @@ namespace Repository.Services
         /// <param name="notesId">The notes identifier.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Response body for created lable</returns>
         public LableResponseModel CreateLable(long notesId, long jwtUserId, LableModel model)
         {
             try
             {
-                try
+                var validNotesAndUser = this.context.UserTable.Where(e => e.UserId == jwtUserId);
+                FundooLable lable = new ()
                 {
-                    var validNotesAndUser = this.context.UserTable.Where(e => e.UserId == jwtUserId);
-                    FundooLable lable = new()
-                    {
-                        NotesId = notesId,
-                        UserId = jwtUserId,
-                        Lable_Name = model.Lable_Name
-                    };
-                    this.context.Add(lable);
-                    this.context.SaveChanges();
+                    NotesId = notesId,
+                    UserId = jwtUserId,
+                    Lable_Name = model.Lable_Name
+                };
+                this.context.Add(lable);
+                this.context.SaveChanges();
 
-                    LableResponseModel responseModel = new()
-                    {
-                        LableId = lable.LableId,
-                        NotesId = lable.NotesId,
-                        UserId = lable.UserId,
-                        Lable_Name = lable.Lable_Name
-                    };
-                    return responseModel;
-                }
-                catch (Exception ex)
+                LableResponseModel responseModel = new ()
                 {
-                    throw;
-                }
+                    LableId = lable.LableId,
+                    NotesId = lable.NotesId,
+                    UserId = lable.UserId,
+                    Lable_Name = lable.Lable_Name
+                };
+                return responseModel;
             }
             catch (Exception ex)
             {
@@ -66,7 +75,7 @@ namespace Repository.Services
         /// Gets all lable.
         /// </summary>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
+        /// <returns>Response body of all lables</returns>
         public LableResponseModel GetAllLable(long jwtUserId)
         {
             try
@@ -74,8 +83,8 @@ namespace Repository.Services
                 var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
-                    var response = this.context.LableTable.FirstOrDefault(e=> e.UserId == jwtUserId);
-                    LableResponseModel model = new()
+                    var response = this.context.LableTable.FirstOrDefault(e => e.UserId == jwtUserId);
+                    LableResponseModel model = new ()
                     {
                         LableId = response.LableId,
                         NotesId = response.NotesId,
@@ -84,11 +93,11 @@ namespace Repository.Services
                     };
                     return model;
                 }
+
                 return null;
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
@@ -98,7 +107,7 @@ namespace Repository.Services
         /// </summary>
         /// <param name="lableId">The lable identifier.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
+        /// <returns>Lables with particular lableId</returns>
         public FundooLable GetLablesWithId(long lableId, long jwtUserId)
         {
             try
@@ -108,11 +117,11 @@ namespace Repository.Services
                 {
                     return this.context.LableTable.FirstOrDefault(e => e.LableId == lableId);
                 }
+
                 return null;
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
@@ -122,7 +131,7 @@ namespace Repository.Services
         /// </summary>
         /// <param name="lableId">The lable identifier.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
+        /// <returns>Response body of lable with particular lableId</returns>
         public LableResponseModel GetLableWithId(long lableId, long jwtUserId)
         {
             try
@@ -130,21 +139,21 @@ namespace Repository.Services
                 var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
-                    var response=this.context.LableTable.FirstOrDefault(e => e.LableId == lableId && e.UserId == jwtUserId);
-                    LableResponseModel model = new()
+                    var response = this.context.LableTable.FirstOrDefault(e => e.LableId == lableId && e.UserId == jwtUserId);
+                    LableResponseModel model = new ()
                     {
-                        LableId=response.LableId,
-                        NotesId=response.NotesId,
-                        UserId=response.UserId,
-                        Lable_Name=response.Lable_Name
+                        LableId = response.LableId,
+                        NotesId = response.NotesId,
+                        UserId = response.UserId,
+                        Lable_Name = response.Lable_Name
                     };
                     return model;
                 }
+
                 return null;
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
@@ -155,6 +164,7 @@ namespace Repository.Services
         /// <param name="updateLable">The update lable.</param>
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <returns>Response Body of update lable</returns>
         public LableResponseModel UpdateLable(FundooLable updateLable, UpdateLableModel model, long jwtUserId)
         {
             try
@@ -166,8 +176,8 @@ namespace Repository.Services
                     updateLable.NotesId = model.NotesId;
                     this.context.SaveChanges();
 
-                    var response = this.context.LableTable.FirstOrDefault(e =>e.UserId == jwtUserId);
-                    LableResponseModel models = new()
+                    var response = this.context.LableTable.FirstOrDefault(e => e.UserId == jwtUserId);
+                    LableResponseModel models = new ()
                     {
                         LableId = response.LableId,
                         NotesId = response.NotesId,
@@ -176,6 +186,7 @@ namespace Repository.Services
                     };
                     return models;
                 }
+
                 return null;
             }
             catch (Exception ex)
@@ -211,7 +222,7 @@ namespace Repository.Services
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        /// <returns></returns>
+        /// <returns>Response Body for Added Lable</returns>
         public LableResponseModel AddLable(LableModel model, long jwtUserId)
         {
             try
@@ -219,7 +230,7 @@ namespace Repository.Services
                 var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
                 if (validUserId != null)
                 {
-                    FundooLable lable = new()
+                    FundooLable lable = new ()
                     {
                         Lable_Name = model.Lable_Name,
                         UserId = jwtUserId
@@ -227,7 +238,7 @@ namespace Repository.Services
                     this.context.Add(lable);
                     this.context.SaveChanges();
 
-                    LableResponseModel models = new()
+                    LableResponseModel models = new ()
                     {
                         LableId = lable.LableId,
                         NotesId = lable.NotesId,
@@ -236,6 +247,7 @@ namespace Repository.Services
                     };
                     return models;
                 }
+
                 return null;
             }
             catch (Exception ex)

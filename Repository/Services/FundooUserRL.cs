@@ -1,38 +1,57 @@
-﻿using Common.Models;
-using Common.UserModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Repository.Context;
-using Repository.Entities;
-using Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="FundooUserRL.cs" company="Fundoo Notes Application">
+//     FundooUserRL copyright tag.
+// </copyright>
 
 namespace Repository.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Common.Models;
+    using Common.UserModels;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Tokens;
+    using Repository.Context;
+    using Repository.Entities;
+    using Repository.Interfaces;
+
+    /// <summary>
+    /// Repository Layer Fundoo User
+    /// </summary>
+    /// <seealso cref="Repository.Interfaces.IFundooUserRL&lt;Repository.Entities.FundooUser&gt;" />
     public class FundooUserRL : IFundooUserRL<FundooUser>
     {
-        readonly FundooUserContext context;
+        /// <summary>
+        /// The context
+        /// </summary>
+        private readonly FundooUserContext context;
 
-        private readonly IConfiguration _config;
+        /// <summary>
+        /// The configuration
+        /// </summary>
+        private readonly IConfiguration config;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FundooUserRL"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="config">The configuration.</param>
         public FundooUserRL(FundooUserContext context, IConfiguration config)
         {
             this.context = context;
-            _config = config;
+            this.config = config;
         }
 
         /// <summary>
         /// Encrypteds the password.
         /// </summary>
         /// <param name="password">The password.</param>
-        /// <returns></returns>
+        /// <returns>Encypted Password</returns>
         public static string EncryptedPassword(string password)
         {
             try
@@ -53,19 +72,19 @@ namespace Repository.Services
         /// </summary>
         /// <param name="email">The email.</param>
         /// <param name="userId">The user identifier.</param>
-        /// <returns></returns>
+        /// <returns>Json Web Token</returns>
         public string JwtTokenGenerate(string email, long userId)
         {
             try
             {
                 var loginTokenHandler = new JwtSecurityTokenHandler();
-                var loginTokenKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config[("Jwt:key")]));
+                var loginTokenKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(this.config[("Jwt:key")]));
                 var loginTokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim(ClaimTypes.Email, email),
-                        new Claim("UserId",userId.ToString())
+                        new Claim("UserId", userId.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddMinutes(15),
                     SigningCredentials = new SigningCredentials(loginTokenKey, SecurityAlgorithms.HmacSha256Signature)
@@ -73,7 +92,7 @@ namespace Repository.Services
                 var token = loginTokenHandler.CreateToken(loginTokenDescriptor);
                 return loginTokenHandler.WriteToken(token);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -83,11 +102,12 @@ namespace Repository.Services
         /// Registers the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
+        /// <returns>Response Body of Registration</returns>
         public RegistrationResponse Register(RegistrationModel model)
         {
             try
             {
-                FundooUser user = new()
+                FundooUser user = new ()
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
@@ -97,11 +117,11 @@ namespace Repository.Services
                 };
                 this.context.Add(user);
                 this.context.SaveChanges();
-                RegistrationResponse response = new()
+                RegistrationResponse response = new ()
                 {
                     FirstName = user.FirstName,
-                    LastName=user.LastName,
-                    Email=user.Email
+                    LastName = user.LastName,
+                    Email = user.Email
                 };
                 return response;
             }
@@ -115,7 +135,7 @@ namespace Repository.Services
         /// Logins the specified model.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Json Web Token</returns>
         public string Login(LoginModel model)
         {
             try
@@ -123,7 +143,7 @@ namespace Repository.Services
                 var loginValidation = this.context.UserTable.FirstOrDefault(e => e.Email == model.Email && e.Password == EncryptedPassword(model.Password));
                 if (loginValidation != null)
                 {
-                    var token = JwtTokenGenerate(model.Email, loginValidation.UserId);
+                    var token = this.JwtTokenGenerate(model.Email, loginValidation.UserId);
                     return token;
                 }
                 else
@@ -141,7 +161,7 @@ namespace Repository.Services
         /// Forgets the password.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Json Web Token To Mail</returns>
         public string ForgetPassword(ForgetPasswordModel model)
         {
             try
@@ -149,7 +169,7 @@ namespace Repository.Services
                 var emailValidation = this.context.UserTable.FirstOrDefault(e => e.Email == model.Email);
                 if (emailValidation != null)
                 {
-                    var token = JwtTokenGenerate(emailValidation.Email, emailValidation.UserId);
+                    var token = this.JwtTokenGenerate(emailValidation.Email, emailValidation.UserId);
                     new MsmqModel().MsmqSender(token);
                     return token;
                 }
@@ -169,8 +189,8 @@ namespace Repository.Services
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="email">The email.</param>
-        /// <returns></returns>
-        public bool ResetPassword(ResetPasswordModel model,string email)
+        /// <returns>True or False</returns>
+        public bool ResetPassword(ResetPasswordModel model, string email)
         {
             try
             {
@@ -181,9 +201,10 @@ namespace Repository.Services
                     this.context.SaveChanges();
                     return true;
                 }
+
                 return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw;
             }
@@ -192,7 +213,7 @@ namespace Repository.Services
         /// <summary>
         /// Redises the user.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>All User in User Table</returns>
         public List<FundooUser> RedisUser()
         {
             try
