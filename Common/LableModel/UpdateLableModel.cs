@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Common.LableModel
 {
-    public class LableResponseModel
+    public class UpdateLableModel
     {
-        public long LableId { get; set; }
-        public long? NotesId { get; set; }
-        public long UserId { get; set; }
         public string Lable_Name { get; set; }
+        public long? NotesId { get; set; }
     }
 }

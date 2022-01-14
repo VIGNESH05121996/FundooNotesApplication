@@ -17,7 +17,7 @@ namespace Repository.Entities
 
         public FundooNotes FundooNotes { get; set; }
         [ForeignKey("FundooNotes")]
-        public long NotesId { get; set; }
+        public long? NotesId { get; set; }
 
 
         public FundooUser FundooUser { get; set; }

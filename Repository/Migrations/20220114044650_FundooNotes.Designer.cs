@@ -10,7 +10,7 @@ using Repository.Context;
 namespace Repository.Migrations
 {
     [DbContext(typeof(FundooUserContext))]
-    [Migration("20220110101051_FundooNotes")]
+    [Migration("20220114044650_FundooNotes")]
     partial class FundooNotes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace Repository.Migrations
                     b.Property<string>("Lable_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("NotesId")
+                    b.Property<long?>("NotesId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("UserId")
@@ -172,9 +172,7 @@ namespace Repository.Migrations
                 {
                     b.HasOne("Repository.Entities.FundooNotes", "FundooNotes")
                         .WithMany("FundooLable")
-                        .HasForeignKey("NotesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("NotesId");
 
                     b.HasOne("Repository.Entities.FundooUser", "FundooUser")
                         .WithMany("FundooLable")

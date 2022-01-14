@@ -1,4 +1,5 @@
 ﻿using Common.LableModel;
+using Common.NotesModels;
 using Repository.Context;
 using Repository.Entities;
 using Repository.Interfaces;
@@ -154,7 +155,7 @@ namespace Repository.Services
         /// <param name="updateLable">The update lable.</param>
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public void UpdateLable(FundooLable updateLable, LableModel model, long jwtUserId)
+        public void UpdateLable(FundooLable updateLable, UpdateLableModel model, long jwtUserId)
         {
             try
             {
@@ -162,6 +163,7 @@ namespace Repository.Services
                 if (validUserId != null)
                 {
                     updateLable.Lable_Name = model.Lable_Name;
+                    updateLable.NotesId = model.NotesId;
                     this.context.SaveChanges();
                 }
             }
@@ -204,13 +206,15 @@ namespace Repository.Services
             try
             {
                 var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
-                if(validUserId != null)
+                if (validUserId != null)
                 {
                     FundooLable lable = new()
                     {
                         Lable_Name = model.Lable_Name,
-                        UserId=jwtUserId
+                        UserId = jwtUserId
                     };
+                    this.context.Add(lable);
+                    this.context.SaveChanges();
                     return lable;
                 }
                 return null;

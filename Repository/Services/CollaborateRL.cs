@@ -75,7 +75,7 @@ namespace Repository.Services
 
                 CollabResponseModel responseModel = new()
                 {
-                    CollaboratorId=collaborate.CollaboratorId,
+                    CollaboratorId = collaborate.CollaboratorId,
                     NotesId=collaborate.NotesId,
                     UserId=collaborate.UserId,
                     Collaborated_Email=collaborate.Collaborated_Email

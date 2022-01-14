@@ -4,10 +4,14 @@ using Common.NotesModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using Repository.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FundooNotesApplication.Controllers
@@ -18,9 +22,14 @@ namespace FundooNotesApplication.Controllers
     public class NotesController : ControllerBase
     {
         public readonly IFundooNotesBL notesBL;
-        public NotesController(IFundooNotesBL notesBL)
+        private readonly IMemoryCache memoryCache;
+        private readonly IDistributedCache distributedCache;
+        public NotesController(IFundooNotesBL notesBL,IMemoryCache memoryCache, IDistributedCache distributedCache)
         {
             this.notesBL = notesBL;
+            this.memoryCache = memoryCache;
+            this.distributedCache = distributedCache;
+
         }
 
         /// <summary>
@@ -262,6 +271,43 @@ namespace FundooNotesApplication.Controllers
                 }
                 ImageResponseModel imageDetails =notesBL.ImageNotes(notesId,imageNotes, image, jwtUserId);
                 return Ok(new { Success = true, message = "Image Uploaded", imageDetails});
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Success = false, Message = ex.Message, StackTraceException = ex.StackTrace });
+            }
+        }
+
+        /// <summary>
+        /// Redises the catching fundoo notes.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("redis")]
+        public async Task<IActionResult> RedisCatchingFundooNotes()
+        {
+            try
+            {
+                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                if (jwtUserId != 0)
+                {
+                    var cacheKey = "fundoonotesList";
+                    string serializedNotesList;
+                    var notesList = new List<FundooNotes>();
+                    var redisNotesList = await distributedCache.GetAsync(cacheKey);
+                    if (redisNotesList != null)
+                    {
+                        serializedNotesList = Encoding.UTF8.GetString(redisNotesList);
+                        notesList = JsonConvert.DeserializeObject<List<FundooNotes>>(serializedNotesList);
+                    }
+                    else
+                    {
+                        notesList = (List<FundooNotes>)notesBL.RedisNotes();
+                        serializedNotesList = JsonConvert.SerializeObject(notesList);
+                        redisNotesList = Encoding.UTF8.GetBytes(serializedNotesList);
+                        return Ok(notesList);
+                    }
+                }
+                return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
             }
             catch (Exception ex)
             {

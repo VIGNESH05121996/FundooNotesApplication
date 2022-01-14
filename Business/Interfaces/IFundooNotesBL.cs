@@ -23,5 +23,6 @@ namespace Business.Interfaces
         GetNotesResposeModel TrashingNotes(long notesId, long jwtUserId);
         void ColorNotes(long notesId, FundooNotes colorNotes, ColorModel color, long jwtUserId);
         ImageResponseModel ImageNotes(long notesId,FundooNotes imageNotes, IFormFile image, long jwtUserId);
+        IEnumerable<FundooNotes> RedisNotes();
     }
 }

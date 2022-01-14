@@ -14,7 +14,7 @@ namespace Repository.Interfaces
         LableResponseModel GetLableWithId(long lableId, long jwtUserId);
         void DeleteLable(FundooLable lable, long jwtUserId);
         LableResponseModel GetAllLable(long jwtUserId);
-        void UpdateLable(FundooLable updateLable, LableModel model, long jwtUserId);
+        void UpdateLable(FundooLable updateLable, UpdateLableModel model, long jwtUserId);
         FundooLable GetLablesWithId(long lableId, long jwtUserId);
         FundooLable AddLable(LableModel model, long jwtUserId);
     }

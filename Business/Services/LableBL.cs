@@ -114,7 +114,7 @@ namespace Business.Services
         /// <param name="updateLable">The update lable.</param>
         /// <param name="model">The model.</param>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public void UpdateLable(FundooLable updateLable, LableModel model, long jwtUserId)
+        public void UpdateLable(FundooLable updateLable, UpdateLableModel model, long jwtUserId)
         {
             try
             {

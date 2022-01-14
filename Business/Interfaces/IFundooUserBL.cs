@@ -14,5 +14,6 @@ namespace Business.Interfaces
         string Login(LoginModel model);
         string ForgetPassword(ForgetPasswordModel model);
         bool ResetPassword(ResetPasswordModel model,string email);
+        List<FundooUser> RedisUser();
     }
 }

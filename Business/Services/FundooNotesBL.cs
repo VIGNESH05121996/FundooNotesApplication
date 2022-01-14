@@ -218,5 +218,21 @@ namespace Business.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// Redises the notes.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<FundooNotes> RedisNotes()
+        {
+            try
+            {
+                return this.fundooNotesRL.RedisNotes();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

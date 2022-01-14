@@ -180,5 +180,21 @@ namespace Repository.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// Redises the user.
+        /// </summary>
+        /// <returns></returns>
+        public List<FundooUser> RedisUser()
+        {
+            try
+            {
+                return this.context.UserTable.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -3,7 +3,10 @@ using CloudinaryDotNet.Actions;
 using Common.Models;
 using Common.NotesModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Repository.Context;
 using Repository.Entities;
 using Repository.Interfaces;
@@ -20,10 +23,14 @@ namespace Repository.Services
     {
         readonly FundooUserContext context;
         private readonly IConfiguration _config;
-        public FundooNotesRL(FundooUserContext context, IConfiguration config)
+        private readonly IMemoryCache memoryCache;
+        private readonly IDistributedCache distributedCache;
+        public FundooNotesRL(FundooUserContext context, IConfiguration config, IMemoryCache memoryCache, IDistributedCache distributedCache)
         {
             this.context = context;
             _config = config;
+            this.memoryCache = memoryCache;
+            this.distributedCache = distributedCache;
         }
 
         /// <summary>
@@ -70,17 +77,17 @@ namespace Repository.Services
                     var user = this.context.NotesTable.FirstOrDefault(e => e.UserId == jwtUserId);
                     GetNotesResposeModel model = new()
                     {
-                        UserId=user.UserId,
-                        NotesId=user.NotesId,
+                        UserId = user.UserId,
+                        NotesId = user.NotesId,
                         Title = user.Title,
-                        Message=user.Message,
-                        Color=user.Color,
-                        Image=user.Image,
-                        Pin=user.Pin,
-                        Archive=user.Archive,
-                        Trash=user.Trash,
-                        CreatedAt=user.CreatedAt,
-                        ModifiedAt=user.ModifiedAt
+                        Message = user.Message,
+                        Color = user.Color,
+                        Image = user.Image,
+                        Pin = user.Pin,
+                        Archive = user.Archive,
+                        Trash = user.Trash,
+                        CreatedAt = user.CreatedAt,
+                        ModifiedAt = user.ModifiedAt
                     };
                     return model;
                 }
@@ -88,7 +95,6 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
@@ -488,6 +494,23 @@ namespace Repository.Services
                     }  
                 }
                 return null;
+            }
+            catch (Exception ex)
+            {
+                throw; 
+            }
+        }
+
+        /// <summary>
+        /// Gets all notes.
+        /// </summary>
+        /// <param name="jwtUserId">The JWT user identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<FundooNotes> RedisNotes()
+        {
+            try
+            {
+                return this.context.NotesTable.ToList();
             }
             catch (Exception ex)
             {

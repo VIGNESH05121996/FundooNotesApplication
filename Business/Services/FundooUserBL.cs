@@ -87,5 +87,21 @@ namespace Business.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// Redises the user.
+        /// </summary>
+        /// <returns></returns>
+        public List<FundooUser> RedisUser()
+        {
+            try
+            {
+                return this.fundooUserRL.RedisUser();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
     }
 }

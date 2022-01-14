@@ -19,5 +19,10 @@ namespace Common.NotesModels
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
         public long UserId { get; set; }
+
+        public static explicit operator List<object>(GetNotesResposeModel v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -46,6 +46,12 @@ namespace FundooNotesApplication
             services.AddTransient<ICollaborateRL, CollaborateRL>();
             services.AddTransient<ILableBL, LableBL>();
             services.AddTransient<ILableRL, LableRL>();
+            services.AddMemoryCache();
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "localhost:6379";
+            });
+
             services.AddAuthentication();
 
             services.AddDbContext<FundooUserContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:FundooAppDB"]));
