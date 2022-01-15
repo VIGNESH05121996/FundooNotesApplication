@@ -81,10 +81,6 @@ namespace Repository.Services
                     {
                         Title = model.Title,
                         Message = model.Message,
-                        Color = model.Color,
-                        Image = model.Image,
-                        Archive = model.Archive,
-                        Pin = model.Pin,
                         CreatedAt = model.CreatedAt,
                         UserId = jwtUserId
                     };

@@ -40,46 +40,6 @@ namespace Common.Models
         public string Message { get; set; }
 
         /// <summary>
-        /// Gets or sets the color.
-        /// </summary>
-        /// <value>
-        /// The color.
-        /// </value>
-        public string Color { get; set; }
-
-        /// <summary>
-        /// Gets or sets the image.
-        /// </summary>
-        /// <value>
-        /// The image.
-        /// </value>
-        public string Image { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="NotesModel"/> is archive.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if archive; otherwise, <c>false</c>.
-        /// </value>
-        public bool Archive { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="NotesModel"/> is pin.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if pin; otherwise, <c>false</c>.
-        /// </value>
-        public bool Pin { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="NotesModel"/> is trash.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if trash; otherwise, <c>false</c>.
-        /// </value>
-        public bool Trash { get; set; }
-
-        /// <summary>
         /// Gets or sets the created at.
         /// </summary>
         /// <value>
