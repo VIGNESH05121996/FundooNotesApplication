@@ -52,14 +52,14 @@ namespace FundooNotesApplication.Controllers
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (jwtUserId == 0 && notesId == 0)
                 {
-                    return BadRequest(new { Success = false, message = "Name Missing For Lable" });
+                    return NotFound(new { Success = false, message = "Name Missing For Lable" });
                 }
                 LableResponseModel lable=lableBL.CreateLable(notesId, jwtUserId, model);
                 return Ok(new { Success = true, message = "Lable Created", lable });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = "No Notes With Particular NotesId", Exception_Message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -76,13 +76,13 @@ namespace FundooNotesApplication.Controllers
                 LableResponseModel lable = lableBL.GetAllLable(jwtUserId);
                 if (lable == null)
                 {
-                    return BadRequest(new { Success = false, message = "No lable in database " });
+                    return NotFound(new { Success = false, message = "No lable in database " });
                 }
                 return Ok(new { Success = true, message = "Retrived All lables ", lable });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -100,13 +100,13 @@ namespace FundooNotesApplication.Controllers
                 LableResponseModel lable = lableBL.GetLableWithId(lableId, jwtUserId);
                 if (lable == null)
                 {
-                    return BadRequest(new { Success = false, message = "No Lable With Particular LableId " });
+                    return NotFound(new { Success = false, message = "No Lable With Particular LableId " });
                 }
                 return Ok(new { Success = true, message = "Retrived Lable ", lable });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -125,14 +125,14 @@ namespace FundooNotesApplication.Controllers
                 FundooLable updateLable = lableBL.GetLablesWithId(lableId, jwtUserId);
                 if (updateLable == null)
                 {
-                    return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
+                    return NotFound(new { Success = false, message = "No Notes Found With NotesId" });
                 }
                 LableResponseModel lable = lableBL.UpdateLable(updateLable, model, jwtUserId);
                 return Ok(new { Success = true, message = "Lable Updated Sucessfully", lable });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -150,14 +150,14 @@ namespace FundooNotesApplication.Controllers
                 FundooLable lable = lableBL.GetLablesWithId(lableId, jwtUserId);
                 if (lable == null)
                 {
-                    return BadRequest(new { Success = false, message = "No Lable Found" });
+                    return NotFound(new { Success = false, message = "No Lable Found" });
                 }
                 lableBL.DeleteLable(lable, jwtUserId);
                 return Ok(new { Success = true, message = "Lable Removed" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -174,14 +174,14 @@ namespace FundooNotesApplication.Controllers
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (jwtUserId == 0)
                 {
-                    return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
+                    return NotFound(new { Success = false, message = "No Notes Found With NotesId" });
                 }
                 LableResponseModel addLable = lableBL.AddLable(model, jwtUserId);
                 return Ok(new { Success = true, message = "Lable Updated Sucessfully", addLable });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
     }

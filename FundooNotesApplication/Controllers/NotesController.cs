@@ -70,14 +70,14 @@ namespace FundooNotesApplication.Controllers
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (model == null)
                 {
-                    return BadRequest(new { Success = false, message = "No Data in notes" });
+                    return NotFound(new { Success = false, message = "No Data in notes" });
                 }
                 GetNotesResponseModel notes = notesBL.CreateNotes(model, jwtUserId);
                 return Ok(new { Success = true, message = "Notes Created Successfully", notes });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -94,13 +94,13 @@ namespace FundooNotesApplication.Controllers
                 GetNotesResponseModel notes = notesBL.GetAllNotes(jwtUserId);
                 if (notes == null)
                 {
-                    return BadRequest(new { Success = false, message = "No notes in database " });
+                    return NotFound(new { Success = false, message = "No notes in database " });
                 }
                 return Ok(new { Success = true, message = "Retrived All Notes ", notes });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -118,13 +118,13 @@ namespace FundooNotesApplication.Controllers
                 GetNotesResponseModel notes = notesBL.GetNoteWithId(notesId, jwtUserId);
                 if (notes == null)
                 {
-                    return BadRequest(new { Success = false, message = "No Notes With Particular NotesId " });
+                    return NotFound(new { Success = false, message = "No Notes With Particular NotesId " });
                 }
                 return Ok(new { Success = true, message = "Retrived Notes With Particular NotesId ", notes });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -143,14 +143,14 @@ namespace FundooNotesApplication.Controllers
                 FundooNotes updateNotes = notesBL.GetNotesWithId(notesId, jwtUserId);
                 if (updateNotes == null)
                 {
-                    return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
+                    return NotFound(new { Success = false, message = "No Notes Found With NotesId" });
                 }
                 GetNotesResponseModel note = notesBL.UpdateNotes(notesId, updateNotes, notes, jwtUserId);
                 return Ok(new { Success = true, message = "Notes Updated Sucessfully", note });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -168,14 +168,14 @@ namespace FundooNotesApplication.Controllers
                 FundooNotes notes = notesBL.GetNotesWithId(notesId, jwtUserId);
                 if (notes == null)
                 {
-                    return BadRequest(new { Success = false, message = "Notes with entered notesId not found" });
+                    return NotFound(new { Success = false, message = "Notes with entered notesId not found" });
                 }
                 notesBL.DeleteNotes(notesId, notes, jwtUserId);
                 return Ok(new { Success = true, message = "Notes Deleted From DataBase" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -192,14 +192,14 @@ namespace FundooNotesApplication.Controllers
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (notesBL.GetNotesWithId(notesId, jwtUserId) == null)
                 {
-                    return BadRequest(new { Status = false, message = "No Notes available" });
+                    return NotFound(new { Status = false, message = "No Notes available" });
                 }
                 var result = notesBL.PinningNotes(notesId, jwtUserId);
                 return Ok(new { Status = true, message ="Pinning Note", result });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -216,14 +216,14 @@ namespace FundooNotesApplication.Controllers
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (notesBL.GetNotesWithId(notesId, jwtUserId) == null)
                 {
-                    return BadRequest(new { Status = false, message = "There is no notes with particuar NotesId" });
+                    return NotFound(new { Status = false, message = "There is no notes with particuar NotesId" });
                 }
                 var result = notesBL.ArchivingNotes(notesId, jwtUserId);
                 return Ok(new { Status = true, message ="Archiving Note", result });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -240,14 +240,14 @@ namespace FundooNotesApplication.Controllers
                 long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (notesBL.GetNotesWithId(notesId, jwtUserId) == null)
                 {
-                    return BadRequest(new { Status = false, message = "There is no notes with particuar NotesId" });
+                    return NotFound(new { Status = false, message = "There is no notes with particuar NotesId" });
                 }
                 var result = notesBL.TrashingNotes(notesId, jwtUserId);
                 return Ok(new { Status = true, message ="Trashing Note", result });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -266,14 +266,14 @@ namespace FundooNotesApplication.Controllers
                 FundooNotes colorNotes = notesBL.GetNotesWithId(notesId, jwtUserId);
                 if (colorNotes == null)
                 {
-                    return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
+                    return NotFound(new { Success = false, message = "No Notes Found With NotesId" });
                 }
                 notesBL.ColorNotes(notesId, colorNotes, color, jwtUserId);
                 return Ok(new { Success = true, message = "Color Updated" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -292,14 +292,14 @@ namespace FundooNotesApplication.Controllers
                 FundooNotes imageNotes = notesBL.GetNotesWithId(notesId, jwtUserId);
                 if (imageNotes == null)
                 {
-                    return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
+                    return NotFound(new { Success = false, message = "No Notes Found With NotesId" });
                 }
                 ImageResponseModel imageDetails = notesBL.ImageNotes(notesId, imageNotes, image, jwtUserId);
                 return Ok(new { Success = true, message = "Image Uploaded", imageDetails});
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -332,11 +332,11 @@ namespace FundooNotesApplication.Controllers
                         return Ok(notesList);
                     }
                 }
-                return BadRequest(new { Success = false, message = "No Notes Found With NotesId" });
+                return NotFound(new { Success = false, message = "No Notes Found With NotesId" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
     }

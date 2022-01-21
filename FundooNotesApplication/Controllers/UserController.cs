@@ -69,14 +69,14 @@ namespace FundooNotesApplication.Controllers
             {
                 if (model == null)
                 {
-                    return BadRequest(new { Success = false, message = "Details Missing" });
+                    return NotFound(new { Success = false, message = "Details Missing" });
                 }
                 RegistrationResponse user = userBL.Register(model);
                 return Ok(new { Success = true, message = "Registration Successfull ", user });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -93,13 +93,13 @@ namespace FundooNotesApplication.Controllers
                 string credentials = userBL.Login(model);
                 if (credentials == null)
                 {
-                    return BadRequest(new { Success = false, message = "Email or Password Not Found" });
+                    return NotFound(new { Success = false, message = "Email or Password Not Found" });
                 }
                 return Ok(new { Success = true, message = "Login Successful", JwtToken = credentials});
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -116,13 +116,13 @@ namespace FundooNotesApplication.Controllers
                 string forgetPassword = userBL.ForgetPassword(model);
                 if (forgetPassword == null)
                 {
-                    return BadRequest(new { Success = false, message = "Email not in database" });
+                    return NotFound(new { Success = false, message = "Email not in database" });
                 }
                 return Ok(new { Success = true, message = "Forget Password Mail Sent" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -143,11 +143,11 @@ namespace FundooNotesApplication.Controllers
                 {
                     return Ok(new { Success = true, message = "Password Reset Successful" });
                 }
-                return BadRequest(new { Success = false, message = "New Password not match with confirm password" });
+                return NotFound(new { Success = false, message = "New Password not match with confirm password" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
 
@@ -180,11 +180,11 @@ namespace FundooNotesApplication.Controllers
                         return Ok(userList);
                     }
                 }
-                return BadRequest(new { Success = false, message = "No User Found With UserId" });
+                return NotFound(new { Success = false, message = "No User Found With UserId" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
             }
         }
     }
