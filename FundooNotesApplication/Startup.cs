@@ -26,6 +26,7 @@ namespace FundooNotesApplication
     using Microsoft.OpenApi.Models;
     using Repository.Context;
     using Repository.Entities;
+    using Repository.ExceptionHandling;
     using Repository.Interfaces;
     using Repository.Services;
 
@@ -69,6 +70,15 @@ namespace FundooNotesApplication
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = "localhost:6379";
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                name: "AllowOrigin",
+              builder => {
+                  builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+              });
             });
 
             services.AddAuthentication();
@@ -130,6 +140,7 @@ namespace FundooNotesApplication
         /// <param name="env">The env.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("AllowOrigin");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -146,6 +157,8 @@ namespace FundooNotesApplication
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

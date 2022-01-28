@@ -30,7 +30,7 @@ namespace Business.Interfaces
         /// Gets all notes.
         /// </summary>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        GetNotesResponseModel GetAllNotes(long jwtUserId);
+        IEnumerable<FundooNotes> GetAllNotes(long jwtUserId);
 
         /// <summary>
         /// Gets the notes with identifier.

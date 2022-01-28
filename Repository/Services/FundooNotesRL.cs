@@ -8,6 +8,7 @@ namespace Repository.Services
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Text;
     using System.Threading.Tasks;
     using CloudinaryDotNet;
@@ -21,6 +22,7 @@ namespace Repository.Services
     using Newtonsoft.Json;
     using Repository.Context;
     using Repository.Entities;
+    using Repository.ExceptionHandling;
     using Repository.Interfaces;
 
     /// <summary>
@@ -106,7 +108,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.BadRequest, "Details missing to create notes");
             }
         }
 
@@ -115,36 +117,15 @@ namespace Repository.Services
         /// </summary>
         /// <param name="jwtUserId">The JWT user identifier.</param>
         /// <returns>Response Body of All Notes</returns>
-        public GetNotesResponseModel GetAllNotes(long jwtUserId)
+        public IEnumerable<FundooNotes> GetAllNotes(long jwtUserId)
         {
             try
             {
-                var validUserId = this.context.UserTable.Where(e => e.UserId == jwtUserId);
-                if (validUserId != null)
-                {
-                    var user = this.context.NotesTable.FirstOrDefault(e => e.UserId == jwtUserId);
-                    GetNotesResponseModel model = new ()
-                    {
-                        UserId = user.UserId,
-                        NotesId = user.NotesId,
-                        Title = user.Title,
-                        Message = user.Message,
-                        Color = user.Color,
-                        Image = user.Image,
-                        Pin = user.Pin,
-                        Archive = user.Archive,
-                        Trash = user.Trash,
-                        CreatedAt = user.CreatedAt,
-                        ModifiedAt = user.ModifiedAt
-                    };
-                    return model;
-                }
-
-                return null;
+                return this.context.NotesTable.Where(e => e.UserId == jwtUserId);
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No notes found");
             }
         }
 
@@ -183,7 +164,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No notes found with NotesId");
             }
         }
 
@@ -207,7 +188,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No notes found with NotesId");
             }
         }
 
@@ -256,7 +237,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No notes found to update");
             }
         }
 
@@ -282,7 +263,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No notes found to delete");
             }
         }
 
@@ -356,7 +337,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No notes found to pin or unpin");
             }
         }
 
@@ -430,7 +411,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.Unauthorized, "No notes found to archive or unarchive");
             }
         }
 
@@ -504,7 +485,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.Unauthorized, "No notes found on trash");
             }
         }
 
@@ -531,7 +512,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No notes found for coloring");
             }
         }
 
@@ -578,7 +559,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw; 
+                throw new CustomException(HttpStatusCode.NotFound, "No notes found to upload image");
             }
         }
 
@@ -594,7 +575,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No notes found");
             }
         }
     }

@@ -2,7 +2,7 @@
 //     MsmqModel copyright tag.
 // </copyright>
 
-namespace Common.Models
+namespace Common.UserModels
 {
     using Experimental.System.Messaging;
     using System;
@@ -15,24 +15,36 @@ namespace Common.Models
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Msmq Model
+    /// Msmq Model class
     /// </summary>
     public class MsmqModel
     {
         MessageQueue msmq = new MessageQueue();
+
+        /// <summary>
+        /// MSMQs the sender.
+        /// </summary>
+        /// <param name="token">The token.</param>
         public void MsmqSender(string token)
         {
-            msmq.Path = @".\private$\Token";
-            if (!MessageQueue.Exists(msmq.Path))
+            try
             {
-                MessageQueue.Create(msmq.Path);
-            }
+                msmq.Path = @".\private$\Token";
+                if (!MessageQueue.Exists(msmq.Path))
+                {
+                    MessageQueue.Create(msmq.Path);
+                }
 
-            msmq.Formatter = new XmlMessageFormatter(new Type[] { typeof(string) });
-            msmq.ReceiveCompleted += MsmqReceiver;
-            msmq.Send(token);
-            msmq.BeginReceive();
-            msmq.Close();
+                msmq.Formatter = new XmlMessageFormatter(new Type[] { typeof(string) });
+                msmq.ReceiveCompleted += MsmqReceiver;
+                msmq.Send(token);
+                msmq.BeginReceive();
+                msmq.Close();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -42,40 +54,49 @@ namespace Common.Models
         /// <param name="e">The <see cref="ReceiveCompletedEventArgs"/> instance containing the event data.</param>
         private void MsmqReceiver(object sender, ReceiveCompletedEventArgs e)
         {
-            var message = msmq.EndReceive(e.AsyncResult);
-            string token = message.Body.ToString();
-            string Subject = "Fundoo Notes Application Password Reset";
-            string Body = token;
-            string jwt = DecodeJwt(token);
-
-
-            //mail sending code
-
-            var smtpClient = new SmtpClient("smtp.gmail.com")
+            try
             {
-                Port = 587,
-                Credentials = new NetworkCredential("vickytestsmtp@gmail.com", "TestSmtp"),
-                EnableSsl = true,
-            };
+                var msg = msmq.EndReceive(e.AsyncResult);
+                string token = msg.Body.ToString();
+                string Subject = "Fundoo Notes Application Password Reset";
+                string Body = $"Fundoo Notes Reset Password: <a href=http://localhost:4200/resetPassword/{token}> Click Here</a>";
+                string receiverMail = DecodeJwt(token);
 
-            smtpClient.Send("vickytestsmtp@gmail.com", jwt, Subject, Body);
+                MailMessage message = new MailMessage("vickytestsmtp@gmail.com", receiverMail);
+                message.Body = Body;
+                message.IsBodyHtml = true;
+                message.Subject = Subject;
 
-            //msmq receiver
-            msmq.BeginReceive();
+                //mail sending code
+
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                NetworkCredential credential = new NetworkCredential("vickytestsmtp@gmail.com", "TestSmtp");
+                smtpClient.EnableSsl = true;
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = credential;
+                smtpClient.Send(message);
+
+                //msmq receiver
+                msmq.BeginReceive();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         /// <summary>
         /// Decodes the JWT.
         /// </summary>
         /// <param name="token">The token.</param>
-        /// <returns>EmailId</returns>
+        /// <returns></returns>
         public static string DecodeJwt(string token)
         {
             try
             {
                 var decodeToken = token;
                 var handler = new JwtSecurityTokenHandler();
-                var jsonToken = handler.ReadJwtToken((decodeToken));
+                var jsonToken = handler.ReadJwtToken((decodeToken)) as JwtSecurityToken;
                 var result = jsonToken.Claims.FirstOrDefault().Value;
                 return result;
             }

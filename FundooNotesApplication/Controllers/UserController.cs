@@ -20,6 +20,7 @@ namespace FundooNotesApplication.Controllers
     using Microsoft.Extensions.Caching.Memory;
     using Newtonsoft.Json;
     using Repository.Entities;
+    using Repository.ExceptionHandling;
 
     /// <summary>
     /// User Controller
@@ -65,19 +66,12 @@ namespace FundooNotesApplication.Controllers
         [HttpPost("register")]
         public IActionResult Register(RegistrationModel model)
         {
-            try
+            if (model == null)
             {
-                if (model == null)
-                {
-                    return NotFound(new { Success = false, message = "Details Missing" });
-                }
-                RegistrationResponse user = userBL.Register(model);
-                return Ok(new { Success = true, message = "Registration Successfull ", user });
+                return NotFound(new { Success = false, message = "Details Missing" });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            RegistrationResponse user = userBL.Register(model);
+            return Ok(new { Success = true, message = "Registration Successfull ", user });
         }
 
         /// <summary>
@@ -88,19 +82,12 @@ namespace FundooNotesApplication.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginModel model)
         {
-            try
+            string credentials = userBL.Login(model);
+            if (credentials == null)
             {
-                string credentials = userBL.Login(model);
-                if (credentials == null)
-                {
-                    return NotFound(new { Success = false, message = "Email or Password Not Found" });
-                }
-                return Ok(new { Success = true, message = "Login Successful", JwtToken = credentials});
+                return NotFound(new { Success = false, message = "Email or Password Not Found" });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            return Ok(new { Success = true, message = "Login Successful", JwtToken = credentials });
         }
 
         /// <summary>
@@ -111,19 +98,12 @@ namespace FundooNotesApplication.Controllers
         [HttpPost("ForgetPassword")]
         public IActionResult ForgetPassword(ForgetPasswordModel model)
         {
-            try
+            string forgetPassword = userBL.ForgetPassword(model);
+            if (forgetPassword == null)
             {
-                string forgetPassword = userBL.ForgetPassword(model);
-                if (forgetPassword == null)
-                {
-                    return NotFound(new { Success = false, message = "Email not in database" });
-                }
-                return Ok(new { Success = true, message = "Forget Password Mail Sent" });
+                return NotFound(new { Success = false, message = "Email not in database" });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            return Ok(new { Success = true, message = "Forget Password Mail Sent" });
         }
 
         /// <summary>
@@ -135,20 +115,13 @@ namespace FundooNotesApplication.Controllers
         [HttpPut("ResetPassword")]
         public IActionResult ResetPassword(ResetPasswordModel model)
         {
-            try
+            var email = User.FindFirst(ClaimTypes.Email).Value.ToString();
+            bool resetPassword = userBL.ResetPassword(model, email);
+            if (resetPassword)
             {
-                var email = User.FindFirst(ClaimTypes.Email).Value.ToString();
-                bool resetPassword = userBL.ResetPassword(model, email);
-                if (resetPassword)
-                {
-                    return Ok(new { Success = true, message = "Password Reset Successful" });
-                }
-                return NotFound(new { Success = false, message = "New Password not match with confirm password" });
+                return Ok(new { Success = true, message = "Password Reset Successful" });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            return NotFound(new { Success = false, message = "New Password not match with confirm password" });
         }
 
         /// <summary>
@@ -158,34 +131,23 @@ namespace FundooNotesApplication.Controllers
         [HttpGet("redis")]
         public async Task<IActionResult> RedisCatchingFundooUser()
         {
-            try
+            var cacheKey = "fundooUserList";
+            string serializedNotesList;
+            var userList = new List<FundooUser>();
+            var redisUserList = await distributedCache.GetAsync(cacheKey);
+            if (redisUserList != null)
             {
-                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                if (jwtUserId != 0)
-                {
-                    var cacheKey = "fundooUserList";
-                    string serializedNotesList;
-                    var userList = new List<FundooUser>();
-                    var redisUserList = await distributedCache.GetAsync(cacheKey);
-                    if (redisUserList != null)
-                    {
-                        serializedNotesList = Encoding.UTF8.GetString(redisUserList);
-                        userList = JsonConvert.DeserializeObject<List<FundooUser>>(serializedNotesList);
-                    }
-                    else
-                    {
-                        userList = (List<FundooUser>)userBL.RedisUser();
-                        serializedNotesList = JsonConvert.SerializeObject(userList);
-                        redisUserList = Encoding.UTF8.GetBytes(serializedNotesList);
-                        return Ok(userList);
-                    }
-                }
-                return NotFound(new { Success = false, message = "No User Found With UserId" });
+                serializedNotesList = Encoding.UTF8.GetString(redisUserList);
+                userList = JsonConvert.DeserializeObject<List<FundooUser>>(serializedNotesList);
             }
-            catch (Exception ex)
+            else
             {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
+                userList = (List<FundooUser>)userBL.RedisUser();
+                serializedNotesList = JsonConvert.SerializeObject(userList);
+                redisUserList = Encoding.UTF8.GetBytes(serializedNotesList);
+                return Ok(userList);
             }
+            return NotFound(new { Success = false, message = "No User Found With UserId" });
         }
     }
 }

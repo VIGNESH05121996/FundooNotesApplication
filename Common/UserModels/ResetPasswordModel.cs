@@ -30,5 +30,7 @@ namespace Common.Models
         /// The confirm password.
         /// </value>
         public string ConfirmPassword { get; set; }
+
+
     }
 }

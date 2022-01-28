@@ -47,20 +47,13 @@ namespace FundooNotesApplication.Controllers
         [HttpPost("{notesId}")]
         public IActionResult AddCollaborate(long notesId, CollaborateModel model)
         {
-            try
+            long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+            if (jwtUserId == 0 && notesId == 0)
             {
-                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                if (jwtUserId == 0 && notesId == 0)
-                {
-                    return NotFound(new { Success = false, message = "Email Missing For Collaboration" });
-                }
-                CollabResponseModel collaborate = collaborateBL.AddCollaborate(notesId, jwtUserId, model);
-                return Ok(new { Success = true, message = "Collaboration Successfull ", collaborate });
+                return NotFound(new { Success = false, message = "Email Missing For Collaboration" });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            CollabResponseModel collaborate = collaborateBL.AddCollaborate(notesId, jwtUserId, model);
+            return Ok(new { Success = true, message = "Collaboration Successfull ", collaborate });
         }
 
         /// <summary>
@@ -71,20 +64,13 @@ namespace FundooNotesApplication.Controllers
         [HttpDelete("{collabId}")]
         public IActionResult DeleteCollaborate(long collabId)
         {
-            try
+            FundooCollaborate collab = collaborateBL.GetCollabWithId(collabId);
+            if (collab == null)
             {
-                FundooCollaborate collab = collaborateBL.GetCollabWithId(collabId);
-                if (collab == null)
-                {
-                    return NotFound(new { Success = false, message = "No Collaboration Found" });
-                }
-                collaborateBL.DeleteCollab(collab);
-                return Ok(new { Success = true, message = "Collaborated Email Removed" });
+                return NotFound(new { Success = false, message = "No Collaboration Found" });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            collaborateBL.DeleteCollab(collab);
+            return Ok(new { Success = true, message = "Collaborated Email Removed" });
         }
     }
 }

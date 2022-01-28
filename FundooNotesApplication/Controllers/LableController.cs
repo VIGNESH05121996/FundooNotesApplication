@@ -47,20 +47,13 @@ namespace FundooNotesApplication.Controllers
         [HttpPost("{notesId}")]
         public IActionResult CreateLable(long notesId, LableModel model)
         {
-            try
+            long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+            if (jwtUserId == 0 && notesId == 0)
             {
-                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                if (jwtUserId == 0 && notesId == 0)
-                {
-                    return NotFound(new { Success = false, message = "Name Missing For Lable" });
-                }
-                LableResponseModel lable=lableBL.CreateLable(notesId, jwtUserId, model);
-                return Ok(new { Success = true, message = "Lable Created", lable });
+                return NotFound(new { Success = false, message = "Name Missing For Lable" });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            LableResponseModel lable = lableBL.CreateLable(notesId, jwtUserId, model);
+            return Ok(new { Success = true, message = "Lable Created", lable });
         }
 
         /// <summary>
@@ -70,20 +63,13 @@ namespace FundooNotesApplication.Controllers
         [HttpGet]
         public IActionResult GetAllLable()
         {
-            try
+            long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+            LableResponseModel lable = lableBL.GetAllLable(jwtUserId);
+            if (lable == null)
             {
-                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                LableResponseModel lable = lableBL.GetAllLable(jwtUserId);
-                if (lable == null)
-                {
-                    return NotFound(new { Success = false, message = "No lable in database " });
-                }
-                return Ok(new { Success = true, message = "Retrived All lables ", lable });
+                return NotFound(new { Success = false, message = "No lable in database " });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            return Ok(new { Success = true, message = "Retrived All lables ", lable });
         }
 
         /// <summary>
@@ -94,20 +80,13 @@ namespace FundooNotesApplication.Controllers
         [HttpGet("{lableId}")]
         public IActionResult GetLableWithId(long lableId)
         {
-            try
+            long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+            LableResponseModel lable = lableBL.GetLableWithId(lableId, jwtUserId);
+            if (lable == null)
             {
-                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                LableResponseModel lable = lableBL.GetLableWithId(lableId, jwtUserId);
-                if (lable == null)
-                {
-                    return NotFound(new { Success = false, message = "No Lable With Particular LableId " });
-                }
-                return Ok(new { Success = true, message = "Retrived Lable ", lable });
+                return NotFound(new { Success = false, message = "No Lable With Particular LableId " });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            return Ok(new { Success = true, message = "Retrived Lable ", lable });
         }
 
         /// <summary>
@@ -119,21 +98,14 @@ namespace FundooNotesApplication.Controllers
         [HttpPut("{lableId}")]
         public IActionResult UpdateLable(long lableId, UpdateLableModel model)
         {
-            try
+            long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+            FundooLable updateLable = lableBL.GetLablesWithId(lableId, jwtUserId);
+            if (updateLable == null)
             {
-                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                FundooLable updateLable = lableBL.GetLablesWithId(lableId, jwtUserId);
-                if (updateLable == null)
-                {
-                    return NotFound(new { Success = false, message = "No Notes Found With NotesId" });
-                }
-                LableResponseModel lable = lableBL.UpdateLable(updateLable, model, jwtUserId);
-                return Ok(new { Success = true, message = "Lable Updated Sucessfully", lable });
+                return NotFound(new { Success = false, message = "No Notes Found With NotesId" });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            LableResponseModel lable = lableBL.UpdateLable(updateLable, model, jwtUserId);
+            return Ok(new { Success = true, message = "Lable Updated Sucessfully", lable });
         }
 
         /// <summary>
@@ -144,21 +116,14 @@ namespace FundooNotesApplication.Controllers
         [HttpDelete("{lableId}")]
         public IActionResult DeleteLable(long lableId)
         {
-            try
+            long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+            FundooLable lable = lableBL.GetLablesWithId(lableId, jwtUserId);
+            if (lable == null)
             {
-                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                FundooLable lable = lableBL.GetLablesWithId(lableId, jwtUserId);
-                if (lable == null)
-                {
-                    return NotFound(new { Success = false, message = "No Lable Found" });
-                }
-                lableBL.DeleteLable(lable, jwtUserId);
-                return Ok(new { Success = true, message = "Lable Removed" });
+                return NotFound(new { Success = false, message = "No Lable Found" });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            lableBL.DeleteLable(lable, jwtUserId);
+            return Ok(new { Success = true, message = "Lable Removed" });
         }
 
         /// <summary>
@@ -169,20 +134,13 @@ namespace FundooNotesApplication.Controllers
         [HttpPost("AddLable")]
         public IActionResult AddLable(LableModel model)
         {
-            try
+            long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+            if (jwtUserId == 0)
             {
-                long jwtUserId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                if (jwtUserId == 0)
-                {
-                    return NotFound(new { Success = false, message = "No Notes Found With NotesId" });
-                }
-                LableResponseModel addLable = lableBL.AddLable(model, jwtUserId);
-                return Ok(new { Success = true, message = "Lable Updated Sucessfully", addLable });
+                return NotFound(new { Success = false, message = "No Notes Found With NotesId" });
             }
-            catch (Exception ex)
-            {
-                return NotFound(new { Success = false, message = ex.Message, StackTraceException = ex.StackTrace });
-            }
+            LableResponseModel addLable = lableBL.AddLable(model, jwtUserId);
+            return Ok(new { Success = true, message = "Lable Updated Sucessfully", addLable });
         }
     }
 }

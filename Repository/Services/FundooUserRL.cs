@@ -8,6 +8,7 @@ namespace Repository.Services
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
+    using System.Net;
     using System.Security.Claims;
     using System.Text;
     using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace Repository.Services
     using Microsoft.IdentityModel.Tokens;
     using Repository.Context;
     using Repository.Entities;
+    using Repository.ExceptionHandling;
     using Repository.Interfaces;
 
     /// <summary>
@@ -63,7 +65,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.BadRequest, "Password missing for encryption");
             }
         }
 
@@ -94,7 +96,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.BadRequest, "Cannot generate json web token since claims not added");
             }
         }
 
@@ -127,7 +129,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.BadRequest, "Details already in database");
             }
         }
 
@@ -153,7 +155,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.Unauthorized, "User Credentiatials wrong");
             }
         }
 
@@ -180,7 +182,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No email found in database");
             }
         }
 
@@ -206,7 +208,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.Unauthorized, "Not authorized with token");
             }
         }
 
@@ -222,7 +224,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "Cannot fetch details");
             }
         }
     }

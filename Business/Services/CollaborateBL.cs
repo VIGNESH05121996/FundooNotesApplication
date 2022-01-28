@@ -40,14 +40,7 @@ namespace Business.Services
         /// <param name="collabId">The collab identifier.</param>
         public FundooCollaborate GetCollabWithId(long collabId)
         {
-            try
-            {
-                return this.collaborateRL.GetCollabWithId(collabId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.collaborateRL.GetCollabWithId(collabId);
         }
 
         /// <summary>
@@ -56,14 +49,7 @@ namespace Business.Services
         /// <param name="collab">The collab.</param>
         public void DeleteCollab(FundooCollaborate collab)
         {
-            try
-            {
-                this.collaborateRL.DeleteCollab(collab);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            this.collaborateRL.DeleteCollab(collab);
         }
 
         /// <summary>
@@ -74,14 +60,7 @@ namespace Business.Services
         /// <param name="model">The model.</param>
         public CollabResponseModel AddCollaborate(long notesId, long jwtUserId, CollaborateModel model)
         {
-            try
-            {
-                return this.collaborateRL.AddCollaborate(notesId, jwtUserId, model);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.collaborateRL.AddCollaborate(notesId, jwtUserId, model);
         }
     }
 }

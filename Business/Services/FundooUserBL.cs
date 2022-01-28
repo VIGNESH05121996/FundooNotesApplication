@@ -42,14 +42,7 @@ namespace Business.Services
         /// <param name="model">The model.</param>
         public RegistrationResponse Register(RegistrationModel model)
         {
-            try
-            {
-                return this.fundooUserRL.Register(model);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooUserRL.Register(model);
         }
 
         /// <summary>
@@ -58,14 +51,7 @@ namespace Business.Services
         /// <param name="model"></param>
         public string Login(LoginModel model)
         {
-            try
-            {
-                return this.fundooUserRL.Login(model);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooUserRL.Login(model);
         }
 
         /// <summary>
@@ -74,14 +60,7 @@ namespace Business.Services
         /// <param name="model">The model.</param>
         public string ForgetPassword(ForgetPasswordModel model)
         {
-            try
-            {
-                return this.fundooUserRL.ForgetPassword(model);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooUserRL.ForgetPassword(model);
         }
 
         /// <summary>
@@ -91,14 +70,7 @@ namespace Business.Services
         /// <param name="email">The email.</param>
         public bool ResetPassword(ResetPasswordModel model, string email)
         {
-            try
-            {
-                return this.fundooUserRL.ResetPassword(model, email);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooUserRL.ResetPassword(model, email);
         }
 
         /// <summary>
@@ -106,14 +78,7 @@ namespace Business.Services
         /// </summary>
         public List<FundooUser> RedisUser()
         {
-            try
-            {
-                return this.fundooUserRL.RedisUser();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooUserRL.RedisUser();
         }
     }
 }

@@ -42,14 +42,7 @@ namespace Business.Services
         /// <param name="model">The model.</param>
         public LableResponseModel CreateLable(long notesId, long jwtUserId, LableModel model)
         {
-            try
-            {
-                return this.lableRL.CreateLable(notesId, jwtUserId, model);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.lableRL.CreateLable(notesId, jwtUserId, model);
         }
 
         /// <summary>
@@ -59,14 +52,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public void DeleteLable(FundooLable lable, long jwtUserId)
         {
-            try
-            {
-                this.lableRL.DeleteLable(lable, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            this.lableRL.DeleteLable(lable, jwtUserId);
         }
 
         /// <summary>
@@ -75,14 +61,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public LableResponseModel GetAllLable(long jwtUserId)
         {
-            try
-            {
-                return this.lableRL.GetAllLable(jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.lableRL.GetAllLable(jwtUserId);
         }
 
         /// <summary>
@@ -92,15 +71,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public FundooLable GetLablesWithId(long lableId, long jwtUserId)
         {
-            try
-            {
-                return this.lableRL.GetLablesWithId(lableId, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            return this.lableRL.GetLablesWithId(lableId, jwtUserId);
         }
 
         /// <summary>
@@ -110,14 +81,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public LableResponseModel GetLableWithId(long lableId, long jwtUserId)
         {
-            try
-            {
-                return this.lableRL.GetLableWithId(lableId, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.lableRL.GetLableWithId(lableId, jwtUserId);
         }
 
         /// <summary>
@@ -128,14 +92,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public LableResponseModel UpdateLable(FundooLable updateLable, UpdateLableModel model, long jwtUserId)
         {
-            try
-            {
-               return this.lableRL.UpdateLable(updateLable, model, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.lableRL.UpdateLable(updateLable, model, jwtUserId);
         }
 
         /// <summary>
@@ -145,14 +102,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public LableResponseModel AddLable(LableModel model, long jwtUserId)
         {
-            try
-            {
-                return this.lableRL.AddLable(model, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.lableRL.AddLable(model, jwtUserId);
         }
     }
 }

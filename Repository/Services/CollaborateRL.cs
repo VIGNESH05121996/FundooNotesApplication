@@ -7,11 +7,13 @@ namespace Repository.Services
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Text;
     using System.Threading.Tasks;
     using Common.CollaboratorModels;
     using Repository.Context;
     using Repository.Entities;
+    using Repository.ExceptionHandling;
     using Repository.Interfaces;
 
     /// <summary>
@@ -47,7 +49,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No collaborators found");
             }
         }
 
@@ -64,7 +66,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.NotFound, "No collaborator id found to delete");
             }
         }
 
@@ -100,7 +102,7 @@ namespace Repository.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new CustomException(HttpStatusCode.BadRequest, "Details missing to collaborate");
             }
         }
     }

@@ -43,30 +43,16 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public GetNotesResponseModel CreateNotes(NotesModel model, long jwtUserId)
         {
-            try
-            {
-                return this.fundooNotesRL.CreateNotes(model, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooNotesRL.CreateNotes(model, jwtUserId);
         }
 
         /// <summary>
         /// Gets all notes.
         /// </summary>
         /// <param name="jwtUserId">The JWT user identifier.</param>
-        public GetNotesResponseModel GetAllNotes(long jwtUserId)
+        public IEnumerable<FundooNotes> GetAllNotes(long jwtUserId)
         {
-            try
-            {
-                return this.fundooNotesRL.GetAllNotes(jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooNotesRL.GetAllNotes(jwtUserId);
         }
 
         /// <summary>
@@ -76,14 +62,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public GetNotesResponseModel GetNoteWithId(long notesId, long jwtUserId)
         {
-            try
-            {
-                return this.fundooNotesRL.GetNoteWithId(notesId, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooNotesRL.GetNoteWithId(notesId, jwtUserId);
         }
 
         /// <summary>
@@ -93,14 +72,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public FundooNotes GetNotesWithId(long notesId, long jwtUserId)
         {
-            try
-            {
-                return this.fundooNotesRL.GetNotesWithId(notesId, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooNotesRL.GetNotesWithId(notesId, jwtUserId);
         }
 
         /// <summary>
@@ -112,14 +84,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public GetNotesResponseModel UpdateNotes(long notesId, FundooNotes updateNotes, UpdateNotesModel notes, long jwtUserId)
         {
-            try
-            {
-               return this.fundooNotesRL.UpdateNotes(notesId, updateNotes, notes, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooNotesRL.UpdateNotes(notesId, updateNotes, notes, jwtUserId);
         }
 
         /// <summary>
@@ -130,14 +95,7 @@ namespace Business.Services
         /// <returns></returns>
         public void DeleteNotes(long notesId, FundooNotes notes, long jwtUserId)
         {
-            try
-            {
-                this.fundooNotesRL.DeleteNotes(notesId, notes, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            this.fundooNotesRL.DeleteNotes(notesId, notes, jwtUserId);
         }
 
         /// <summary>
@@ -147,14 +105,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public GetNotesResponseModel PinningNotes(long notesId, long jwtUserId)
         {
-            try
-            {
-                return this.fundooNotesRL.PinningNotes(notesId, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooNotesRL.PinningNotes(notesId, jwtUserId);
         }
 
         /// <summary>
@@ -164,14 +115,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public GetNotesResponseModel ArchivingNotes(long notesId, long jwtUserId)
         {
-            try
-            {
-                return this.fundooNotesRL.ArchivingNotes(notesId, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooNotesRL.ArchivingNotes(notesId, jwtUserId);
         }
 
         /// <summary>
@@ -181,14 +125,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public GetNotesResponseModel TrashingNotes(long notesId, long jwtUserId)
         {
-            try
-            {
-                return this.fundooNotesRL.TrashingNotes(notesId, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooNotesRL.TrashingNotes(notesId, jwtUserId);
         }
 
         /// <summary>
@@ -200,14 +137,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public void ColorNotes(long notesId, FundooNotes colorNotes, ColorModel color, long jwtUserId)
         {
-            try
-            {
-                this.fundooNotesRL.ColorNotes(notesId, colorNotes, color, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            this.fundooNotesRL.ColorNotes(notesId, colorNotes, color, jwtUserId);
         }
 
         /// <summary>
@@ -219,14 +149,7 @@ namespace Business.Services
         /// <param name="jwtUserId">The JWT user identifier.</param>
         public ImageResponseModel ImageNotes(long notesId, FundooNotes imageNotes, IFormFile image, long jwtUserId)
         {
-            try
-            {
-                return this.fundooNotesRL.ImageNotes(notesId, imageNotes, image, jwtUserId);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooNotesRL.ImageNotes(notesId, imageNotes, image, jwtUserId);
         }
 
         /// <summary>
@@ -235,14 +158,7 @@ namespace Business.Services
         /// <returns></returns>
         public IEnumerable<FundooNotes> RedisNotes()
         {
-            try
-            {
-                return this.fundooNotesRL.RedisNotes();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            return this.fundooNotesRL.RedisNotes();
         }
     }
 }
